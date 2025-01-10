@@ -368,6 +368,7 @@ body {
     top: 170px;
     left: 60px;
     -webkit-user-drag: none;
+    filter: hue-rotate(90deg) brightness(0.5);
 }
 
 #icon_c {

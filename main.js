@@ -5,7 +5,8 @@ document.getElementById("button").addEventListener("click", () => {
 
   document.getElementById("home").remove();
 
-  const world_data = [];
+  const worldData = [];
+
   let data = "";
 
   while (data.length <= x / 20) {
@@ -13,13 +14,13 @@ document.getElementById("button").addEventListener("click", () => {
   }
 
   for (let i = 0; i < y / 20; i++) {
-    world_data.push(data);
+    worldData.push(data);
   }
 
   let main_chara = 0;
 
-  let scroll_x = 0;
-  let scroll_y = 0;
+  let scrollX = 0;
+  let scrollY = 0;
 
   const canvas = document.getElementById("screen");
   const ctx = canvas.getContext("2d");
@@ -34,8 +35,8 @@ document.getElementById("button").addEventListener("click", () => {
   let mode_2 = 0;
   let flag = false;
 
-  let mouse_X = 0;
-  let mouse_Y = 0;
+  let mouseX = 0;
+  let mouseY = 0;
 
   let var_length = 0;
   let text_length = 0;
@@ -47,6 +48,8 @@ document.getElementById("button").addEventListener("click", () => {
   let Mouse_Angle = 0;
   let f_Mouse_Angle = false;
 
+  let Checkbox = false;
+
   const img_list = [];
 
   ctx.fillStyle = "azure";
@@ -55,25 +58,25 @@ document.getElementById("button").addEventListener("click", () => {
     if (isMouseDown) {
       ctx.strokeStyle = "white";
       ctx.strokeRect(
-        Math.round(click_x / 20) * 20 - scroll_x,
-        Math.round(click_y / 20) * 20 - scroll_y,
+        Math.round(click_x / 20) * 20 - scrollX,
+        Math.round(click_y / 20) * 20 - scrollY,
         Math.round(
-          (mouse_X - rect.left - Math.round(click_x / 20) * 20 + scroll_x) / 20
+          (mouseX - rect.left - Math.round(click_x / 20) * 20 + scrollX) / 20
         ) * 20,
         Math.round(
-          (mouse_Y - rect.top - Math.round(click_y / 20) * 20 + scroll_y) / 20
+          (mouseY - rect.top - Math.round(click_y / 20) * 20 + scrollY) / 20
         ) * 20
       );
       requestAnimationFrame(trackMouse);
     } else {
       let newChar = "";
-      for (let i = dx - 1; i >= 0; i--) {
+      for (let i = deltaX - 1; i >= 0; i--) {
         newChar = newChar + "1";
       }
-      for (let i = dy - 1; i >= 0; i--) {
-        let str = world_data[Math.round(click_y / 20) + i];
+      for (let i = deltaY - 1; i >= 0; i--) {
+        let str = worldData[Math.round(click_y / 20) + i];
         let index = Math.round(click_x / 20);
-        world_data[Math.round(click_y / 20) + i] =
+        worldData[Math.round(click_y / 20) + i] =
           str.substring(0, index) +
           newChar +
           str.substring(index + newChar.length);
@@ -177,7 +180,7 @@ document.getElementById("button").addEventListener("click", () => {
 
   let polygon_data = [];
 
-  const orbit_data = [{ x: 240, y: 180, t: 0 }];
+  const orbitData = [{ x: 240, y: 180, t: 0 }];
 
   let ret = 0;
 
@@ -203,8 +206,8 @@ document.getElementById("button").addEventListener("click", () => {
 
   let frame_n = false;
 
-  let pointer_x = 0;
-  let pointer_y = 0;
+  let pointerX = 0;
+  let pointerY = 0;
 
   let line_0;
   let line_1;
@@ -272,6 +275,9 @@ document.getElementById("button").addEventListener("click", () => {
 
   let time = 0;
 
+  let Time_Recording = 0;
+  let gameTime = 0;
+
   let start = false;
 
   let id = 0;
@@ -307,8 +313,19 @@ document.getElementById("button").addEventListener("click", () => {
         img_3.style.pointerEvents = "none";
         inp.style.pointerEvents = "none";
         if (flag) {
-          scroll_x += (player_x - scroll_x - 375) * 0.1;
-          scroll_y += (player_y - scroll_y - 207.5) * 0.1;
+          gameTime++;
+          if (Checkbox) {
+            orbitData.some((data, index) => {
+              if (data.t > gameTime) {
+                scrollX = orbitData[index - 1].x + (data.x - orbitData[index - 1].x) * ((gameTime - orbitData[index - 1].t) / (data.t - orbitData[index - 1].t)) - 300;
+                scrollY = orbitData[index - 1].y + (data.y - orbitData[index - 1].y) * ((gameTime - orbitData[index - 1].t) / (data.t - orbitData[index - 1].t)) - 162;
+                return true;
+              }
+            });
+          } else {
+            scrollX += (player_x - scrollX - 375) * 0.1;
+            scrollY += (player_y - scrollY - 207.5) * 0.1;
+          }
 
           if (keys.ArrowRight) {
             speed_x += speed;
@@ -325,10 +342,10 @@ document.getElementById("button").addEventListener("click", () => {
             Math.round((player_y - 10) / 20) + 1 < y / 20
           ) {
             if (
-              world_data[Math.round((player_y - 10) / 20)][
+              worldData[Math.round((player_y - 10) / 20)][
                 Math.round((player_x - 10) / 20) + 1
               ] === "1" ||
-              world_data[Math.round((player_y - 10) / 20) + 1][
+              worldData[Math.round((player_y - 10) / 20) + 1][
                 Math.round((player_x - 10) / 20) + 1
               ] === "1"
             ) {
@@ -337,10 +354,10 @@ document.getElementById("button").addEventListener("click", () => {
             }
 
             if (
-              world_data[Math.round((player_y - 10) / 20)][
+              worldData[Math.round((player_y - 10) / 20)][
                 Math.round((player_x - 10) / 20)
               ] === "1" ||
-              world_data[Math.round((player_y - 10) / 20) + 1][
+              worldData[Math.round((player_y - 10) / 20) + 1][
                 Math.round((player_x - 10) / 20)
               ] === "1"
             ) {
@@ -367,10 +384,10 @@ document.getElementById("button").addEventListener("click", () => {
                 Math.round((player_y - 10) / 20) + 1 < y / 20
               ) {
                 if (
-                  world_data[Math.round((player_y - 10) / 20) + 1][
+                  worldData[Math.round((player_y - 10) / 20) + 1][
                     Math.round((player_x - 10) / 20)
                   ] === "1" ||
-                  world_data[Math.round((player_y - 10) / 20) + 1][
+                  worldData[Math.round((player_y - 10) / 20) + 1][
                     Math.round((player_x - 10) / 20) + 1
                   ] === "1"
                 ) {
@@ -386,10 +403,10 @@ document.getElementById("button").addEventListener("click", () => {
               Math.round((player_y - 10) / 20) + 1 < y / 20
             ) {
               if (
-                world_data[Math.round((player_y - 10) / 20) + 1][
+                worldData[Math.round((player_y - 10) / 20) + 1][
                   Math.round((player_x - 10) / 20)
                 ] === "1" ||
-                world_data[Math.round((player_y - 10) / 20) + 1][
+                worldData[Math.round((player_y - 10) / 20) + 1][
                   Math.round((player_x - 10) / 20) + 1
                 ] === "1"
               ) {
@@ -406,10 +423,10 @@ document.getElementById("button").addEventListener("click", () => {
                 Math.round((player_y - 10) / 20) + 1 < y / 20
               ) {
                 if (
-                  world_data[Math.round((player_y - 10) / 20)][
+                  worldData[Math.round((player_y - 10) / 20)][
                     Math.round((player_x - 10) / 20)
                   ] === "1" ||
-                  world_data[Math.round((player_y - 10) / 20)][
+                  worldData[Math.round((player_y - 10) / 20)][
                     Math.round((player_x - 10) / 20) + 1
                   ] === "1"
                 ) {
@@ -425,10 +442,10 @@ document.getElementById("button").addEventListener("click", () => {
               Math.round((player_y - 10) / 20) + 1 < y / 20
             ) {
               if (
-                world_data[Math.round((player_y - 10) / 20)][
+                worldData[Math.round((player_y - 10) / 20)][
                   Math.round((player_x - 10) / 20)
                 ] === "1" ||
-                world_data[Math.round((player_y - 10) / 20)][
+                worldData[Math.round((player_y - 10) / 20)][
                   Math.round((player_x - 10) / 20) + 1
                 ] === "1"
               ) {
@@ -443,9 +460,10 @@ document.getElementById("button").addEventListener("click", () => {
           player_y = 0;
           speed_x = 0;
           speed_y = 0;
+          gameTime = 0;
         }
 
-        world_data.forEach((data, index) => {
+        worldData.forEach((data, index) => {
           for (let i = 0; i < data.length - 1; i++) {
             if (data[i] === "0") {
               ctx.fillStyle = color_b;
@@ -454,20 +472,29 @@ document.getElementById("button").addEventListener("click", () => {
             if (data[i] === "1") {
               ctx.fillStyle = "azure";
             }
-            ctx.fillRect(i * 20 - scroll_x, index * 20 - scroll_y, 20, 20);
+            ctx.fillRect(i * 20 - scrollX, index * 20 - scrollY, 20, 20);
           }
         });
 
         if (flag) {
           ctx.fillStyle = "white";
-          ctx.fillRect(player_x - scroll_x, player_y - scroll_y, 20, 20);
+          ctx.fillRect(player_x - scrollX, player_y - scrollY, 20, 20);
+        }
+        if (mode === 5 && isMouseDown) {
+          ctx.moveTo(
+            orbitData[orbitData.length - 1].x - scrollX,
+            orbitData[orbitData.length - 1].y - scrollY
+          );
+          ctx.lineTo(pointerX, pointerY);
+          ctx.stroke();
         }
       }
       if (mode === 5) {
-        ctx.strokeStyle = "black";
-        ctx.moveTo(orbit_data[0].x, orbit_data[0].y);
-        orbit_data.forEach((data) => {
-          ctx.lineTo(data.x, data.y);
+        ctx.strokeStyle = "gray";
+        ctx.beginPath();
+        ctx.moveTo(orbitData[0].x - scrollX, orbitData[0].y - scrollY);
+        orbitData.forEach((data) => {
+          ctx.lineTo(data.x - scrollX, data.y - scrollY);
         });
         ctx.stroke();
       }
@@ -478,7 +505,6 @@ document.getElementById("button").addEventListener("click", () => {
       }
       caret.style.transform = `rotate(${caret_angle}deg)`;
       Settings_screen.style.height = `${caret_angle * 2.5}px`;
-      tab.style.clipPath = `inset(100% ${caret_angle}% 100% ${caret_angle}%)`;
       div_5.style.display = "none";
       choice.style.left = `${choice_x}px`;
       choice.style.top = `${choice_y}px`;
@@ -498,8 +524,8 @@ document.getElementById("button").addEventListener("click", () => {
         ctx.strokeRect(
           point_x,
           point_y,
-          pointer_x - point_x,
-          pointer_y - point_y
+          pointerX - point_x,
+          pointerY - point_y
         );
       }
       if (!isMouseDown) {
@@ -508,10 +534,10 @@ document.getElementById("button").addEventListener("click", () => {
 
       if (!cursor && isMousepush) {
         f_Mouse_Angle = Math.asin(
-          (center_y - pointer_y) /
-            Math.sqrt((center_x - pointer_x) ** 2 + (center_y - pointer_y) ** 2)
+          (center_y - pointerY) /
+            Math.sqrt((center_x - pointerX) ** 2 + (center_y - pointerY) ** 2)
         );
-        if (pointer_x < center_x) {
+        if (pointerX < center_x) {
           f_Mouse_Angle *= -1;
           f_Mouse_Angle += Math.PI;
         }
@@ -519,10 +545,10 @@ document.getElementById("button").addEventListener("click", () => {
 
       if (!cursor && isMouseDown) {
         Mouse_Angle = Math.asin(
-          (center_y - pointer_y) /
-            Math.sqrt((center_x - pointer_x) ** 2 + (center_y - pointer_y) ** 2)
+          (center_y - pointerY) /
+            Math.sqrt((center_x - pointerX) ** 2 + (center_y - pointerY) ** 2)
         );
-        if (pointer_x < center_x) {
+        if (pointerX < center_x) {
           Mouse_Angle *= -1;
           Mouse_Angle += Math.PI;
         }
@@ -533,8 +559,8 @@ document.getElementById("button").addEventListener("click", () => {
         ctx.strokeRect(
           point_x,
           point_y,
-          pointer_x - point_x,
-          pointer_y - point_y
+          pointerX - point_x,
+          pointerY - point_y
         );
       }
       if (frame_n !== false) {
@@ -592,7 +618,6 @@ document.getElementById("button").addEventListener("click", () => {
                             { x: point_X, y: point_Y, k: "l", t: time, id: id }
                           );
                           id++;
-                          console.log(id);
                           return true;
                         }
                       });
@@ -605,7 +630,6 @@ document.getElementById("button").addEventListener("click", () => {
                           id: id,
                         });
                         id++;
-                        console.log(`${id}(2)`);
                       }
                     }
                     Modified = true;
@@ -652,7 +676,6 @@ document.getElementById("button").addEventListener("click", () => {
                 if (isMouseDown || f_Mouse_Angle) {
                   point_X = rotate_x;
                   point_Y = rotate_y;
-                  console.log("bb");
                 }
                 if (f_Mouse_Angle != false && !isMouseDown) {
                   if (point[timeline].t == time) {
@@ -660,7 +683,6 @@ document.getElementById("button").addEventListener("click", () => {
                       rotate_x;
                     polygon_data[frame_n][index].d[index_2][timeline].y =
                       rotate_y;
-                    console.log(`${id}(3)`, index_2, timeline);
                   } else {
                     point.some((point_d, index_3) => {
                       if (point_d.t > time) {
@@ -670,7 +692,6 @@ document.getElementById("button").addEventListener("click", () => {
                           { x: point_X, y: point_Y, k: "l", t: time, id: id }
                         );
                         id++;
-                        console.log(`${id}(4)`);
                         return true;
                       }
                     });
@@ -683,7 +704,6 @@ document.getElementById("button").addEventListener("click", () => {
                         id: id,
                       });
                       id++;
-                      console.log(`${id}(5)`);
                     }
                   }
                   Modified = true;
@@ -713,7 +733,7 @@ document.getElementById("button").addEventListener("click", () => {
           ctx.fill();
 
           if (
-            isPointNearEdge({ x: pointer_x, y: pointer_y }, polygon_d) &&
+            isPointNearEdge({ x: pointerX, y: pointerY }, polygon_d) &&
             mode_2 == 4
           ) {
             ctx.strokeStyle = s_color;
@@ -727,7 +747,7 @@ document.getElementById("button").addEventListener("click", () => {
               ctx.stroke();
             }
             if (
-              isPointInPolygon({ x: pointer_x, y: pointer_y }, polygon_d) &&
+              isPointInPolygon({ x: pointerX, y: pointerY }, polygon_d) &&
               mode_2 == 4
             ) {
               ctx.fillStyle = f_color;
@@ -746,7 +766,7 @@ document.getElementById("button").addEventListener("click", () => {
                   loc_output(point);
                   if (
                     Math.sqrt(
-                      (pointer_x - point_X) ** 2 + (pointer_y - point_Y) ** 2
+                      (pointerX - point_X) ** 2 + (pointerY - point_Y) ** 2
                     ) <= 5
                   ) {
                     ctx.strokeStyle = "rgb(99, 255, 250)";
@@ -761,8 +781,8 @@ document.getElementById("button").addEventListener("click", () => {
               } else {
                 if (
                   Math.sqrt(
-                    (pointer_x - point[timeline].x) ** 2 +
-                      (pointer_y - point[timeline].y) ** 2
+                    (pointerX - point[timeline].x) ** 2 +
+                      (pointerY - point[timeline].y) ** 2
                   ) <= 5
                 ) {
                   ctx.strokeStyle = "rgb(99, 255, 250)";
@@ -789,8 +809,8 @@ document.getElementById("button").addEventListener("click", () => {
               let point_dl = polygon_data[frame_n][data3[0]].d[data3[1]];
               if (point_dl[0] > time) {
                 polygon_data[frame_n][data3[0]].d[data3[1]].unshift({
-                  x: pointer_x,
-                  y: pointer_y,
+                  x: pointerX,
+                  y: pointerY,
                   k: "l",
                   t: time,
                   id: id,
@@ -799,8 +819,8 @@ document.getElementById("button").addEventListener("click", () => {
               } else {
                 if (point_dl[point_dl.length - 1].t < time) {
                   polygon_data[frame_n][data3[0]].d[data3[1]].push({
-                    x: pointer_x,
-                    y: pointer_y,
+                    x: pointerX,
+                    y: pointerY,
                     k: "l",
                     t: time,
                     id: id,
@@ -810,8 +830,8 @@ document.getElementById("button").addEventListener("click", () => {
                   point_dl.some((point_d, index_4) => {
                     if (point_d.t == time) {
                       polygon_data[frame_n][data3[0]].d[data3[1]][index_4] = {
-                        x: pointer_x,
-                        y: pointer_y,
+                        x: pointerX,
+                        y: pointerY,
                         k: polygon_data[frame_n][data3[0]].d[data3[1]][index_4]
                           .k,
                         t: time,
@@ -825,7 +845,7 @@ document.getElementById("button").addEventListener("click", () => {
                         index_4,
                         0,
                         {
-                          x: pointer_x,
+                          x: pointerX,
                           y: point_y,
                           k: "l",
                           t: time,
@@ -891,13 +911,13 @@ document.getElementById("button").addEventListener("click", () => {
                 }
               }
               if (isMouseDown) {
-                if (point_x < pointer_x) {
-                  if (point_y < pointer_y) {
+                if (point_x < pointerX) {
+                  if (point_y < pointerY) {
                     if (
                       point_x < point_X &&
-                      pointer_x > point_X &&
+                      pointerX > point_X &&
                       point_y < point_Y &&
-                      pointer_y > point_Y
+                      pointerY > point_Y
                     ) {
                       if (!point_data.includes(point[timeline].id)) {
                         point_data.push(point[timeline].id);
@@ -906,8 +926,8 @@ document.getElementById("button").addEventListener("click", () => {
                   } else {
                     if (
                       point_x < point_X &&
-                      pointer_x > point_X &&
-                      pointer_y < point_Y &&
+                      pointerX > point_X &&
+                      pointerY < point_Y &&
                       point_y > point_Y
                     ) {
                       if (!point_data.includes(point[timeline].id)) {
@@ -916,12 +936,12 @@ document.getElementById("button").addEventListener("click", () => {
                     }
                   }
                 } else {
-                  if (point_y < pointer_y) {
+                  if (point_y < pointerY) {
                     if (
-                      pointer_x < point_X &&
+                      pointerX < point_X &&
                       point_x > point_X &&
                       point_y < point_Y &&
-                      pointer_y > point_Y
+                      pointerY > point_Y
                     ) {
                       if (!point_data.includes(point[timeline].id)) {
                         point_data.push(point[timeline].id);
@@ -929,9 +949,9 @@ document.getElementById("button").addEventListener("click", () => {
                     }
                   } else {
                     if (
-                      pointer_x < point_X &&
+                      pointerX < point_X &&
                       point_x > point_X &&
-                      pointer_y < point_Y &&
+                      pointerY < point_Y &&
                       point_y > point_Y
                     ) {
                       if (!point_data.includes(point[timeline].id)) {
@@ -967,8 +987,8 @@ document.getElementById("button").addEventListener("click", () => {
 
             if (
               Math.sqrt(
-                (pointer_x - polygon_d[0][0].x) ** 2 +
-                  (pointer_y - polygon_d[0][0].y) ** 2
+                (pointerX - polygon_d[0][0].x) ** 2 +
+                  (pointerY - polygon_d[0][0].y) ** 2
               ) <= 5
             ) {
               ctx.strokeStyle = "rgb(99, 255, 250)";
@@ -988,8 +1008,8 @@ document.getElementById("button").addEventListener("click", () => {
             }
             if (
               Math.sqrt(
-                (pointer_x - polygon_d[polygon_d.length - 1][0].x) ** 2 +
-                  (pointer_y - polygon_d[polygon_d.length - 1][0].y) ** 2
+                (pointerX - polygon_d[polygon_d.length - 1][0].x) ** 2 +
+                  (pointerY - polygon_d[polygon_d.length - 1][0].y) ** 2
               ) <= 5
             ) {
               ctx.strokeStyle = "rgb(99, 255, 250)";
@@ -1009,9 +1029,6 @@ document.getElementById("button").addEventListener("click", () => {
             }
           }
         });
-        if (keys.ArrowUp) {
-          console.log(point_data);
-        }
         if (point_data.length != 0 && !isMouseDown) {
           ctx.strokeRect(left, top, right - left, bottom - top);
           ctx.beginPath();
@@ -1026,10 +1043,10 @@ document.getElementById("button").addEventListener("click", () => {
             10
           );
           if (
-            pointer_x > (left + right) / 2 - 10 &&
-            pointer_x < (left + right) / 2 + 10 &&
-            pointer_y > bottom + 10 &&
-            pointer_y < bottom + 30
+            pointerX > (left + right) / 2 - 10 &&
+            pointerX < (left + right) / 2 + 10 &&
+            pointerY > bottom + 10 &&
+            pointerY < bottom + 30
           ) {
             document.body.style.cursor = "pointer";
             cursor = false;
@@ -1169,8 +1186,8 @@ document.getElementById("button").addEventListener("click", () => {
   let click_y = 0;
   let click_x2 = 0;
   let click_y2 = 0;
-  let dx = 0;
-  let dy = 0;
+  let deltaX = 0;
+  let deltaY = 0;
   let rect = canvas.getBoundingClientRect();
 
   canvas.addEventListener("mousedown", (event) => {
@@ -1182,8 +1199,8 @@ document.getElementById("button").addEventListener("click", () => {
     point_y = event.pageY - rect.top;
     start_x = point_x;
     start_y = point_y;
-    click_x = event.pageX - rect.left + scroll_x;
-    click_y = event.pageY - rect.top + scroll_y;
+    click_x = event.pageX - rect.left + scrollX;
+    click_y = event.pageY - rect.top + scrollY;
     click_x2 = ((event.pageX - rect.left) / camera_size) * 100 + camera_x;
     click_y2 = ((event.pageY - rect.top) / camera_size) * 100 + camera_y;
   });
@@ -1206,8 +1223,8 @@ document.getElementById("button").addEventListener("click", () => {
               ],
               [
                 {
-                  x: pointer_x,
-                  y: pointer_y,
+                  x: pointerX,
+                  y: pointerY,
                   k: "l",
                   t: time,
                   id: id + 1,
@@ -1226,8 +1243,8 @@ document.getElementById("button").addEventListener("click", () => {
             if (line_0[1]) {
               polygon_data[frame_n][line_0[0]].d.unshift([
                 {
-                  x: pointer_x,
-                  y: pointer_y,
+                  x: pointerX,
+                  y: pointerY,
                   k: "l",
                   t: time,
                   id: id,
@@ -1237,8 +1254,8 @@ document.getElementById("button").addEventListener("click", () => {
             } else {
               polygon_data[frame_n][line_0[0]].d.push([
                 {
-                  x: pointer_x,
-                  y: pointer_y,
+                  x: pointerX,
+                  y: pointerY,
                   k: "l",
                   t: time,
                   id: id,
@@ -1309,9 +1326,9 @@ document.getElementById("button").addEventListener("click", () => {
         polygon_data[frame_n].push({
           d: [
             [{ x: point_x, y: point_y, k: "l", t: 0, id: id }],
-            [{ x: pointer_x, y: point_y, k: "l", t: 0, id: id + 1 }],
-            [{ x: pointer_x, y: pointer_y, k: "l", t: 0, id: id + 2 }],
-            [{ x: point_x, y: pointer_y, k: "l", t: 0, id: id + 3 }],
+            [{ x: pointerX, y: point_y, k: "l", t: 0, id: id + 1 }],
+            [{ x: pointerX, y: pointerY, k: "l", t: 0, id: id + 2 }],
+            [{ x: point_x, y: pointerY, k: "l", t: 0, id: id + 3 }],
             [{ x: point_x, y: point_y, k: "l", t: 0, id: id + 4 }],
           ],
           close: true,
@@ -1323,70 +1340,68 @@ document.getElementById("button").addEventListener("click", () => {
         p_id += 1;
       }
     }
+    if (mode === 5) {
+      Time_Recording += 90;
+      orbitData.push({ x: pointerX + scrollX, y: pointerY + scrollY, t: Time_Recording });
+    }
     isMouseDown = false;
     isMousepush = false;
   });
 
   canvas.addEventListener("mousemove", (event) => {
-    pointer_x = event.pageX - rect.left;
-    pointer_y = event.pageY - rect.top;
-    end_x = pointer_x;
-    end_y = pointer_y;
+    pointerX = event.pageX - rect.left;
+    pointerY = event.pageY - rect.top;
+    end_x = pointerX;
+    end_y = pointerY;
     if (isMouseDown) {
       if (mode === 0 && edit === 0) {
-        scroll_x = click_x - event.pageX + rect.left;
-        scroll_y = click_y - event.pageY + rect.top;
+        scrollX = click_x - event.pageX + rect.left;
+        scrollY = click_y - event.pageY + rect.top;
         camera_x = click_x2 - ((event.pageX - rect.left) / camera_size) * 100;
         camera_y = click_y2 - ((event.pageY - rect.top) / camera_size) * 100;
       }
       if (
         mode === 1 &&
-        event.pageX - rect.left + scroll_x - 10 <= x &&
-        event.pageY - rect.top + scroll_y < y &&
-        event.pageX - rect.left + scroll_x - 10 >= 0 &&
-        event.pageY - rect.top + scroll_y >= 0
+        event.pageX - rect.left + scrollX - 10 <= x &&
+        event.pageY - rect.top + scrollY < y &&
+        event.pageX - rect.left + scrollX - 10 >= 0 &&
+        event.pageY - rect.top + scrollY >= 0
       ) {
         let w_data =
-          world_data[Math.round((event.pageY - rect.top + scroll_y - 10) / 20)];
-        world_data[Math.round((event.pageY - rect.top + scroll_y - 10) / 20)] =
-          w_data.substring(0, (event.pageX - rect.left + scroll_x) / 20) +
+          worldData[Math.round((event.pageY - rect.top + scrollY - 10) / 20)];
+        worldData[Math.round((event.pageY - rect.top + scrollY - 10) / 20)] =
+          w_data.substring(0, (event.pageX - rect.left + scrollX) / 20) +
           "1" +
-          w_data.substring((event.pageX - rect.left + scroll_x) / 20 + 1);
+          w_data.substring((event.pageX - rect.left + scrollX) / 20 + 1);
       }
       if (
         mode === 2 &&
-        event.pageX - rect.left + scroll_x - 10 <= x &&
-        event.pageY - rect.top + scroll_y < y &&
-        event.pageX - rect.left + scroll_x - 10 >= 0 &&
-        event.pageY - rect.top + scroll_y >= 0
+        event.pageX - rect.left + scrollX - 10 <= x &&
+        event.pageY - rect.top + scrollY < y &&
+        event.pageX - rect.left + scrollX - 10 >= 0 &&
+        event.pageY - rect.top + scrollY >= 0
       ) {
-        let w_data =
-          world_data[Math.round((event.pageY - rect.top + scroll_y - 10) / 20)];
-        world_data[Math.round((event.pageY - rect.top + scroll_y - 10) / 20)] =
-          w_data.substring(0, (event.pageX - rect.left + scroll_x) / 20) +
+        let rowData =
+          worldData[Math.round((event.pageY - rect.top + scrollY - 10) / 20)];
+        worldData[Math.round((event.pageY - rect.top + scrollY - 10) / 20)] =
+          rowData.substring(0, (event.pageX - rect.left + scrollX) / 20) +
           "0" +
-          w_data.substring((event.pageX - rect.left + scroll_x) / 20 + 1);
+          rowData.substring((event.pageX - rect.left + scrollX) / 20 + 1);
       }
       if (
         mode === 3 &&
-        event.pageX - rect.left + scroll_x - 10 <= x &&
-        event.pageY - rect.top + scroll_y < y &&
-        event.pageX - rect.left + scroll_x - 10 >= 0 &&
-        event.pageY - rect.top + scroll_y >= 0
+        event.pageX - rect.left + scrollX - 10 <= x &&
+        event.pageY - rect.top + scrollY < y &&
+        event.pageX - rect.left + scrollX - 10 >= 0 &&
+        event.pageY - rect.top + scrollY >= 0
       ) {
-        mouse_X = event.pageX;
-        mouse_Y = event.pageY;
-        dx = -Math.round((click_x - event.pageX + rect.left - scroll_x) / 20);
-        dy = -Math.round((click_y - event.pageY + rect.top - scroll_y) / 20);
-        trackMouse();
-      }
-      if (mode === 5) {
-        ctx.moveTo(
-          orbit_data[orbit_data.length - 1].x,
-          orbit_data[orbit_data.length - 1].y
+        mouseX = event.pageX;
+        mouseY = event.pageY;
+        deltaX = -Math.round(
+          (click_x - event.pageX + rect.left - scrollX) / 20
         );
-        ctx.lineTo(pointer_x, pointer_y);
-        ctx.stroke();
+        deltaY = -Math.round((click_y - event.pageY + rect.top - scrollY) / 20);
+        trackMouse();
       }
     }
   });
@@ -1488,6 +1503,14 @@ document.getElementById("button").addEventListener("click", () => {
 
   document.getElementById("caret-right").addEventListener("click", () => {
     setting = !setting;
+  });
+
+  document.getElementById("Auto-scroll").addEventListener("change", (event) => {
+    if (event.target.checked) {
+      Checkbox = true;
+    } else {
+      Checkbox = false;
+    }
   });
 
   const click_e = [];
@@ -1771,7 +1794,7 @@ document.getElementById("button").addEventListener("click", () => {
   ];
 
   document.getElementById("label_d").addEventListener("click", function () {
-    const world_data_1 = `${world_data}`.split(",").reverse();
+    const world_data_1 = `${worldData}`.split(",").reverse();
 
     const data = {
       targets: [
