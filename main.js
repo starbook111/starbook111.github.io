@@ -227,6 +227,7 @@ document.getElementById("button").addEventListener("click", () => {
   const handle = document.getElementById("handle");
   const slider_value = document.getElementById("slider-value");
   const custom_menu = document.getElementById("custom_menu");
+  let choice = document.getElementById("choice");
 
   const rotate_arrow = new Image();
   rotate_arrow.src = "./icon/rotate_arrow.svg";
@@ -250,6 +251,9 @@ document.getElementById("button").addEventListener("click", () => {
 
   let touch_x = false;
   let touch_y = 0;
+
+  let choice_x = 0;
+  let choice_y = 0;
 
   const dpr = window.devicePixelRatio || 1;
 
@@ -473,6 +477,8 @@ document.getElementById("button").addEventListener("click", () => {
       Settings_screen.style.height = `${caret_angle * 2.5}px`;
       tab.style.clipPath = `inset(100% ${caret_angle}% 100% ${caret_angle}%)`;
       div_5.style.display = "none";
+      choice.style.left = `${choice_x}px`;
+      choice.style.top = `${choice_y}px`;
     } else {
       ctx.clearRect(0, 0, 1280, 720);
       if (start && tick % 2 == 0) {
@@ -1424,26 +1430,38 @@ document.getElementById("button").addEventListener("click", () => {
 
   document.getElementById("icon_0").addEventListener("click", () => {
     mode = 0;
+    choice_x = 28;
+    choice_y = 170;
   });
 
   document.getElementById("icon_1").addEventListener("click", () => {
     mode = 1;
+    choice_x = 91;
+    choice_y = 170;
   });
 
   document.getElementById("icon_2").addEventListener("click", () => {
     mode = 2;
+    choice_x = 30;
+    choice_y = 246;
   });
 
   document.getElementById("icon_3").addEventListener("click", () => {
     mode = 3;
+    choice_x = 91;
+    choice_y = 246;
   });
 
   document.getElementById("icon_4").addEventListener("click", () => {
     mode = 4;
+    choice_x = 30;
+    choice_y = 322;
   });
 
   document.getElementById("icon_12").addEventListener("click", () => {
     mode = 5;
+    choice_x = 91;
+    choice_y = 322;
   });
 
   document.getElementById("icon_5").addEventListener("click", () => {

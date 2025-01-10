@@ -646,3 +646,11 @@ _u {
     border: 1px solid #707375;
     border-radius: 3px;
 }
+
+#choice {
+    position: absolute;
+    border: 1px solid rgb(34, 40, 45);
+    border-radius: 3px;
+    width: 40px;
+    height: 40px;
+}
