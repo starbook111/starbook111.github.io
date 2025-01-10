@@ -252,8 +252,8 @@ document.getElementById("button").addEventListener("click", () => {
   let touch_x = false;
   let touch_y = 0;
 
-  let choice_x = 0;
-  let choice_y = 0;
+  let choice_x = 28;
+  let choice_y = 170;
 
   const dpr = window.devicePixelRatio || 1;
 
