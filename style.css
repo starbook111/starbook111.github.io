@@ -363,10 +363,11 @@ body {
     opacity: 0;
 }
 
-_u {
+#icon_u {
     position: absolute;
     top: 170px;
     left: 60px;
+    -webkit-user-drag: none;
 }
 
 #icon_c {
@@ -375,6 +376,7 @@ _u {
     top: 270px;
     left: 55px;
     filter: hue-rotate(90deg) brightness(0.5);
+    -webkit-user-drag: none;
 }
 
 #header {
@@ -394,6 +396,26 @@ _u {
     user-select: none;
 }
 
+#icon_0 {
+    -webkit-user-drag: none;
+}
+
+#icon_1 {
+    -webkit-user-drag: none;
+}
+
+#icon_2 {
+    -webkit-user-drag: none;
+}
+
+#icon_3 {
+    -webkit-user-drag: none;
+}
+
+#icon_4 {
+    -webkit-user-drag: none;
+}
+
 #icon_5 {
     transition-duration: 0.2s;
     position: absolute;
@@ -401,6 +423,7 @@ _u {
     left: 660px;
     user-select: none;
     filter: hue-rotate(90deg) brightness(0.5);
+    -webkit-user-drag: none;
 }
 
 #icon_5:hover {
@@ -414,10 +437,15 @@ _u {
     padding-top: 5px;
     padding-left: 15px;
     user-select: none;
+    -webkit-user-drag: none;
+}
+
+#icon_12 {
+    -webkit-user-drag: none;
 }
 
 #text_d {
-    font-family: 'Roboto', sans-serif;;
+    font-family: 'Roboto', sans-serif;
     color: white;
     margin-top: -45px;
     margin-left: 55px;
@@ -471,6 +499,23 @@ _u {
     top: -40px;
     left: 0px;
     filter: hue-rotate(90deg) brightness(0.5);
+    -webkit-user-drag: none;
+}
+
+#icon_8 {
+    -webkit-user-drag: none;
+}
+
+#icon_9 {
+    -webkit-user-drag: none;
+}
+
+#icon_10 {
+    -webkit-user-drag: none;
+}
+
+#icon_11 {
+    -webkit-user-drag: none;
 }
 
 #icon_7:hover {

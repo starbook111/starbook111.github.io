@@ -1305,7 +1305,7 @@ document.getElementById("button").addEventListener("click", () => {
           }
         }
       }
-      if (mode_2 == 3) {
+      if (mode_2 == 3 && polygon_data.length > 0) {
         polygon_data[frame_n].push({
           d: [
             [{ x: point_x, y: point_y, k: "l", t: 0, id: id }],
