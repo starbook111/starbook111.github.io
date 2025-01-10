@@ -255,6 +255,9 @@ document.getElementById("button").addEventListener("click", () => {
   let choice_x = 28;
   let choice_y = 170;
 
+  let choice_x2 = 29;
+  let choice_y2 = 311;
+
   const dpr = window.devicePixelRatio || 1;
 
   canvas.width = 600 * dpr;
@@ -1059,6 +1062,9 @@ document.getElementById("button").addEventListener("click", () => {
         img_3.style.display = "none";
         div_5.style.display = "none";
       }
+
+      choice.style.left = `${choice_x2}px`;
+      choice.style.top = `${choice_y2}px`;
     }
 
     if (mouse_x <= 150 && mouse_x <= 200 && mouse_y >= 150 && mouse_y <= 200) {
@@ -1545,22 +1551,32 @@ document.getElementById("button").addEventListener("click", () => {
 
   document.getElementById("icon_7").addEventListener("click", () => {
     mode_2 = 0;
+    choice_x2 = 29;
+    choice_y2 = 311;
   });
 
   document.getElementById("icon_8").addEventListener("click", () => {
     mode_2 = 1;
+    choice_x2 = 89;
+    choice_y2 = 311;
   });
 
   document.getElementById("icon_9").addEventListener("click", () => {
     mode_2 = 2;
+    choice_x2 = 29;
+    choice_y2 = 382;
   });
 
   document.getElementById("icon_10").addEventListener("click", () => {
     mode_2 = 3;
+    choice_x2 = 89;
+    choice_y2 = 382;
   });
 
   document.getElementById("icon_11").addEventListener("click", () => {
     mode_2 = 4;
+    choice_x2 = 29;
+    choice_y2 = 441;
   });
 
   document.getElementById("linear").addEventListener("click", () => {
