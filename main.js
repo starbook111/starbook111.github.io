@@ -27,6 +27,13 @@ document.getElementById("button").addEventListener("click", () => {
 
   ctx.imageSmoothingEnabled = false;
 
+  const app = new PIXI.Application({
+    width: 800,
+    height: 600,
+    backgroundColor: 0x1099bb,
+  });
+  document.body.appendChild(app.view);
+
   let camera_x = 0;
   let camera_y = 0;
   let camera_size = 100;
@@ -317,8 +324,18 @@ document.getElementById("button").addEventListener("click", () => {
           if (Checkbox) {
             orbitData.some((data, index) => {
               if (data.t > gameTime) {
-                scrollX = orbitData[index - 1].x + (data.x - orbitData[index - 1].x) * ((gameTime - orbitData[index - 1].t) / (data.t - orbitData[index - 1].t)) - 300;
-                scrollY = orbitData[index - 1].y + (data.y - orbitData[index - 1].y) * ((gameTime - orbitData[index - 1].t) / (data.t - orbitData[index - 1].t)) - 162;
+                scrollX =
+                  orbitData[index - 1].x +
+                  (data.x - orbitData[index - 1].x) *
+                    ((gameTime - orbitData[index - 1].t) /
+                      (data.t - orbitData[index - 1].t)) -
+                  300;
+                scrollY =
+                  orbitData[index - 1].y +
+                  (data.y - orbitData[index - 1].y) *
+                    ((gameTime - orbitData[index - 1].t) /
+                      (data.t - orbitData[index - 1].t)) -
+                  162;
                 return true;
               }
             });
@@ -1342,7 +1359,11 @@ document.getElementById("button").addEventListener("click", () => {
     }
     if (mode === 5) {
       Time_Recording += 90;
-      orbitData.push({ x: pointerX + scrollX, y: pointerY + scrollY, t: Time_Recording });
+      orbitData.push({
+        x: pointerX + scrollX,
+        y: pointerY + scrollY,
+        t: Time_Recording,
+      });
     }
     isMouseDown = false;
     isMousepush = false;
