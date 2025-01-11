@@ -101,8 +101,8 @@ body {
     border-radius: 13px;
     width: 60px;
     height: 60px;
-    margin-left: 18px;
-    margin-top: 18px;
+    margin-left: 22.5px;
+    margin-top: 20.75px;
 }
 
 #screen {
@@ -654,7 +654,7 @@ body {
 .controls button {
     padding: 10px 20px;
     font-size: 16px;
-    font-family: 'Roboto', sans-serif;;
+    font-family: 'Roboto', sans-serif;
     border: none;
     border-radius: 5px;
     cursor: pointer;

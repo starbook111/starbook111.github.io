@@ -27,12 +27,6 @@ document.getElementById("button").addEventListener("click", () => {
 
   ctx.imageSmoothingEnabled = false;
 
-  const app = new PIXI.Application({ width: 600, height: 324, backgroundColor: "000000"});
-  app.view.id = "app";
-  document.body.appendChild(app.view);
-
-  const graphics = new PIXI.Graphics();
-
   let camera_x = 0;
   let camera_y = 0;
   let camera_size = 100;
@@ -1569,7 +1563,6 @@ document.getElementById("button").addEventListener("click", () => {
     let div_e = document.createElement("div");
     div_e.setAttribute("class", "svg");
     div_e.setAttribute("id", num);
-    div_e.setAttribute("class", "svg");
     frame.appendChild(div_e);
     icon_c(num);
     num++;
