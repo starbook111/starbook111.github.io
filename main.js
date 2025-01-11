@@ -27,12 +27,11 @@ document.getElementById("button").addEventListener("click", () => {
 
   ctx.imageSmoothingEnabled = false;
 
-  const app = new PIXI.Application({
-    width: 800,
-    height: 600,
-    backgroundColor: 0x1099bb,
-  });
+  const app = new PIXI.Application({ width: 600, height: 324, backgroundColor: "000000"});
+  app.view.id = "app";
   document.body.appendChild(app.view);
+
+  const graphics = new PIXI.Graphics();
 
   let camera_x = 0;
   let camera_y = 0;
