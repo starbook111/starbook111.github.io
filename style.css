@@ -714,3 +714,9 @@ body {
     left: 1080px;
     font-family: 'Roboto', sans-serif;
 }
+
+#caution {
+    position: absolute;
+    top: 100px;
+    left: 100px;
+}
