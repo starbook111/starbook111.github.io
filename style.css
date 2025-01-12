@@ -707,3 +707,10 @@ body {
     left: 640px;
     border-radius: 5px;
 }
+
+#terms_of_use {
+    position: absolute;
+    top: 520px;
+    left: 1100px;
+    font-family: 'Roboto', sans-serif;
+}
