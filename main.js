@@ -5,7 +5,28 @@ document.getElementById("button").addEventListener("click", () => {
 
   document.getElementById("home").remove();
 
-  const worldData = [];
+  let worldData = [];
+
+  let change = false;
+
+  const WorldDataHandler = {
+    set(target, property, value) {
+        if (target[property] !== value) {
+            change = true;
+        }
+        target[property] = value;
+        return true;
+    },
+    deleteProperty(target, property) {
+        if (property in target) {
+            change = true;
+        }
+        delete target[property];
+        return true;
+    }
+};
+
+worldData = new Proxy(worldData, WorldDataHandler);
 
   let data = "";
 
@@ -291,6 +312,10 @@ document.getElementById("button").addEventListener("click", () => {
   let Settings_screen = document.getElementById("Settings_screen");
   let tab = document.getElementById("tab");
 
+  let img = new Image();
+
+  let drawimg = new Image();
+
   const md5Hash = () => {
     return CryptoJS.MD5(
       Math.random().toString(36) + Date.now().toString(36)
@@ -473,18 +498,30 @@ document.getElementById("button").addEventListener("click", () => {
           gameTime = 0;
         }
 
-        worldData.forEach((data, index) => {
-          for (let i = 0; i < data.length - 1; i++) {
-            if (data[i] === "0") {
-              ctx.fillStyle = color_b;
+        if (change) {
+          let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${x}" height="${y}">`;
+          worldData.forEach((data, index) => {
+            for (let i = 0; i < data.length - 1; i++) {
+              if (data[i] === "0") {
+                svg += `<rect x="${i * 20}" y="${index * 20}" width="20" height="20" fill="${color_b}"/>`;
+              }
+              if (data[i] === "1") {
+                svg += `<rect x="${i * 20}" y="${index * 20}" width="20" height="20" fill="azure"/>`;
+              }
             }
-
-            if (data[i] === "1") {
-              ctx.fillStyle = "azure";
-            }
-            ctx.fillRect(i * 20 - scrollX, index * 20 - scrollY, 20, 20);
+          });
+          svg += "</svg>";
+          let blob = new Blob([svg], { type: "image/svg+xml" });
+          let url = URL.createObjectURL(blob);
+          img = new Image();
+          img.src = url;
+          img.onload = () => {
+            drawimg = img;
           }
-        });
+          change = false;
+        }
+
+        ctx.drawImage(drawimg, 0 - scrollX, 0 - scrollY, x, y);
 
         if (flag) {
           ctx.fillStyle = "white";
