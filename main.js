@@ -1399,8 +1399,6 @@ document.getElementById("button").addEventListener("click", () => {
         t: Time_Recording,
       });
     }
-    isMouseDown = false;
-    isMousepush = false;
   });
 
   canvas.addEventListener("mousemove", (event) => {
@@ -1714,6 +1712,8 @@ document.getElementById("button").addEventListener("click", () => {
   });
 
   document.addEventListener("mouseup", () => {
+    isMouseDown = false;
+    isMousepush = false;
     isMouseDown_2 = false;
   });
 
