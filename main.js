@@ -1,3 +1,59 @@
+let light_mode = 1;
+
+let icon_angle = 0;
+
+const circle_half_stroke = document.getElementById("circle-half-stroke");
+const stroke = document.getElementById("stroke");
+const width = document.getElementById("w");
+const height = document.getElementById("h");
+const explanation = document.getElementById("explanation");
+const new_project = document.getElementById("new");
+const set = document.getElementById("setting");
+const block = document.getElementById("block"); 
+const block_2 = document.getElementById("block_2");
+const block_3 = document.getElementById("block_3");
+const block_4 = document.getElementById("block_4");
+const block_5 = document.getElementById("block_5");
+const block_6 = document.getElementById("block_6");
+
+circle_half_stroke.addEventListener("click", () => {
+  icon_angle += 360;
+  circle_half_stroke.style.rotate = `${icon_angle}deg`;
+  light_mode *= -1;
+  if (light_mode === 1) {
+    document.body.style.backgroundColor = "white";
+    circle_half_stroke.setAttribute("src", "./icon/sun.svg");
+    block.setAttribute("src", "./icon/block.svg");
+    block_2.setAttribute("src", "./icon/block_2.svg");
+    block_3.setAttribute("src", "./icon/block_3.svg");
+    block_4.setAttribute("src", "./icon/block_4.svg");
+    block_5.setAttribute("src", "./icon/block_5.svg");
+    block_6.setAttribute("src", "./icon/block_6.svg");
+    stroke.style.backgroundColor = "white";
+    new_project.style.color = "black";
+    width.style.color = "black";
+    height.style.color = "black";
+    explanation.style.color = "black";
+    set.style.color = "black";
+  }
+  if (light_mode === -1) {
+    document.body.style.backgroundColor = "black";
+    circle_half_stroke.setAttribute("src", "./icon/moon.svg");
+    block.setAttribute("src", "./icon/block_b.svg");
+    block_2.setAttribute("src", "./icon/block_2_b.svg");
+    block_3.setAttribute("src", "./icon/block_3_b.svg");
+    block_4.setAttribute("src", "./icon/block_4_b.svg");
+    block_5.setAttribute("src", "./icon/block_5_b.svg");
+    block_6.setAttribute("src", "./icon/block_6_b.svg");
+    stroke.style.backgroundColor = "black";
+    new_project.style.color = "white";
+    width.style.color = "white";
+    height.style.color = "white";
+    explanation.style.color = "white";
+    set.style.color = "white";
+  }
+});
+
 document.getElementById("button").addEventListener("click", () => {
   document.getElementById("edit").style.display = "block";
   let x = document.getElementById("width").value * 20;
@@ -70,6 +126,8 @@ document.getElementById("button").addEventListener("click", () => {
   let f_Mouse_Angle = false;
 
   let Checkbox = false;
+
+  let icon_push = false;
 
   const img_list = [];
 
@@ -203,6 +261,8 @@ document.getElementById("button").addEventListener("click", () => {
 
   const orbitData = [{ x: 240, y: 180, t: 0 }];
 
+  const Anime_data = [];
+
   let ret = 0;
 
   const point_data = [];
@@ -252,6 +312,8 @@ document.getElementById("button").addEventListener("click", () => {
   const slider_value = document.getElementById("slider-value");
   const custom_menu = document.getElementById("custom_menu");
   let choice = document.getElementById("choice");
+  const Moving_icon = document.getElementById("Moving_icon");
+  const coordinate = document.getElementById("coordinate");
 
   const rotate_arrow = new Image();
   rotate_arrow.src = "./icon/rotate_arrow.svg";
@@ -307,6 +369,8 @@ document.getElementById("button").addEventListener("click", () => {
   let caret_angle = 0;
   let center_x = 0;
   let center_y = 0;
+
+  let Add_anime = false;
 
   let caret = document.getElementById("caret-right");
   let Settings_screen = document.getElementById("Settings_screen");
@@ -531,6 +595,53 @@ document.getElementById("button").addEventListener("click", () => {
           ctx.fillStyle = "white";
           ctx.fillRect(player_x - scrollX, player_y - scrollY, 20, 20);
         }
+
+        Anime_data.forEach(animedata => {
+          polygon_data[animedata.number].forEach(polygon => {
+            ctx.beginPath();
+            let draw_number = polygon.d[0].length - 1;
+            polygon.d[0].some((point_d, p_index) => {
+              if (point_d.t >= time) {
+                draw_number = p_index;
+              }
+            });
+            let draw_x = 0;
+            let draw_y = 0;
+            if (draw_number === 0) {
+              draw_x = polygon.d[0][draw_number].x;
+              draw_y = polygon.d[0][draw_number].y;
+            } else {
+              draw_x = polygon.d[0][draw_number - 1].x + (polygon.d[0][draw_number].x - polygon.d[0][draw_number - 1].x) * (time - polygon.d[0][draw_number - 1].t) / (polygon.d[0][draw_number].t - polygon.d[0][draw_number - 1].t);
+              draw_y = polygon.d[0][draw_number - 1].y + (polygon.d[0][draw_number].y - polygon.d[0][draw_number - 1].y) * (time - polygon.d[0][draw_number - 1].t) / (polygon.d[0][draw_number].t - polygon.d[0][draw_number - 1].t);
+            }
+            ctx.strokeStyle = "black";
+            ctx.moveTo(draw_x + animedata.x - scrollX, draw_y + animedata.y - scrollY);
+            polygon.d.forEach(point => {
+              draw_number = point.length - 1;
+              point.some((point_d, p_index) => {
+                if (point_d.t >= time) {
+                  draw_number = p_index;
+                }
+              });
+              if (draw_number === 0) {
+                draw_x = point[draw_number].x;
+                draw_y = point[draw_number].y;
+              } else {
+                draw_x = point[draw_number - 1].x + (point[draw_number].x - point[draw_number - 1].x) * (time - point[draw_number - 1].t) / (point[draw_number].t - point[draw_number - 1].t);
+                draw_y = point[draw_number - 1].y + (point[draw_number].x - point[draw_number - 1].y) * (time - point[draw_number - 1].t) / (point[draw_number].t - point[draw_number - 1].t);
+              }
+              if (keys.ArrowUp) {
+                console.log(draw_x, draw_y);
+              }
+              ctx.lineTo(draw_x + animedata.x - scrollX, draw_y + animedata.y - scrollY);
+            });
+            if (polygon.close) {
+              ctx.closePath();
+            }
+            ctx.stroke();
+          });
+        });
+
         if (mode === 5 && isMouseDown) {
           ctx.moveTo(
             orbitData[orbitData.length - 1].x - scrollX,
@@ -1130,7 +1241,6 @@ document.getElementById("button").addEventListener("click", () => {
         img_3.style.display = "none";
         div_5.style.display = "none";
       }
-
       choice.style.left = `${choice_x2}px`;
       choice.style.top = `${choice_y2}px`;
     }
@@ -1228,6 +1338,33 @@ document.getElementById("button").addEventListener("click", () => {
       });
     } else {
       compress.add("hidden");
+    }
+
+    if (!isMouseDown_2) {
+      icon_push = false;
+    }
+
+    if (icon_push !== false) {
+      Moving_icon.style.left = `${mouse_x - 25}px`;
+      Moving_icon.style.top = `${mouse_y - 25}px`;
+      coordinate.style.left = `${mouse_x + 30}px`;
+      coordinate.style.top = `${mouse_y - 60}px`;
+      coordinate.textContent = `x:${mouse_x - 940}, y:${mouse_y - 327}`;
+      Moving_icon.style.display = "block";
+      if (mouse_x > 640 && mouse_x < 1240 && mouse_y > 165 && mouse_y < 490) {
+        coordinate.style.display = "block";
+        Add_anime = icon_push;
+      } else {
+        coordinate.style.display = "none";
+      }
+      
+    } else {
+      Moving_icon.style.display = "none";
+      coordinate.style.display = "none";
+      if (Add_anime !== false) {
+        Anime_data.push({x:mouse_x + scrollX - 940, y: mouse_y + scrollY - 327, number:Number(Add_anime)});
+        Add_anime = false;
+      }
     }
     const end = Date.now();
     setTimeout(gameLoop, 16 - (end - begin));
@@ -1576,7 +1713,7 @@ document.getElementById("button").addEventListener("click", () => {
     });
     frame_n = id;
     icon_e.classList.add("select");
-    click_e.push(
+    click_e.push([
       icon_e.addEventListener("click", () => {
         const elements = document.querySelectorAll(".select");
         elements.forEach((data) => {
@@ -1585,7 +1722,14 @@ document.getElementById("button").addEventListener("click", () => {
         frame_n = id;
         icon_e.classList.add("select");
       })
-    );
+    , icon_e.addEventListener("mousemove", () => {
+      if (isMouseDown_2) {
+        icon_e.style.opacity = 0;
+        icon_push = icon_e.id;
+      }
+    }), icon_e.addEventListener("mouseout", () => {
+        icon_e.style.opacity = 1;
+    })]);
     click_e[click_e.length - 1];
   };
 
