@@ -122,6 +122,8 @@ document.getElementById("button").addEventListener("click", () => {
 
   let cursor = true;
 
+  let push_point = false;
+
   let Mouse_Angle = 0;
   let f_Mouse_Angle = false;
 
@@ -659,9 +661,6 @@ document.getElementById("button").addEventListener("click", () => {
                     (time - point[draw_number - 1].t)) /
                     (point[draw_number].t - point[draw_number - 1].t);
               }
-              if (keys.ArrowUp) {
-                console.log(draw_x, draw_y);
-              }
               ctx.lineTo(
                 draw_x + animedata.x - scrollX,
                 draw_y + animedata.y - scrollY
@@ -758,6 +757,9 @@ document.getElementById("button").addEventListener("click", () => {
         let left = false;
         let right = false;
         let Modified = false;
+        if (!isMouseDown) {
+          push_point = false;
+        }
         polygon_data[frame_n].forEach((polygon, index) => {
           let polygon_d = polygon.d;
           ctx.beginPath();
@@ -834,7 +836,9 @@ document.getElementById("button").addEventListener("click", () => {
                   ctx.lineTo(point_X, point_Y);
                 }
                 if (point[timeline].k === "q") {
-                  ctx.quadraticCurveTo(10, 10, point_X, point_Y);
+                  ctx.quadraticCurveTo(point[timeline].cpx, point[timeline].cpy, point_X, point_Y);
+                  ctx.lineTo(point[timeline].cpx, point[timeline].cpy);
+                  ctx.lineTo(point_X, point_Y);
                 }
               }
             } else {
@@ -905,7 +909,14 @@ document.getElementById("button").addEventListener("click", () => {
                 ctx.lineTo(point_X, point_Y);
               }
               if (point[timeline].k === "q") {
-                ctx.quadraticCurveTo(10, 10, point_X, point_Y);
+                ctx.quadraticCurveTo(point[timeline].cpx, point[timeline].cpy, point_X, point_Y);
+                ctx.lineTo(point[timeline].cpx, point[timeline].cpy);
+                ctx.lineTo(point_X, point_Y);
+                if (isMouseDown && point[timeline].cpx > pointerX - 5 && point[timeline].cpx < pointerX + 5 && point[timeline].cpy > pointerY - 5 && point[timeline].cpy < pointerY + 5 || push_point === point[timeline].id) {
+                  push_point = point[timeline].id;
+                  polygon_data[frame_n][index].d[index_2][timeline].cpx = pointerX;
+                  polygon_data[frame_n][index].d[index_2][timeline].cpy = pointerY;
+                }
               }
             }
           });
@@ -1838,14 +1849,8 @@ document.getElementById("button").addEventListener("click", () => {
   document.getElementById("Linear-Out").addEventListener("click", () => {
     custom_menu.style.display = "none";
     polygon_data[frame_n][select[0]].d[select[1]][select[2]].k = "q";
-  });
-
-  document.getElementById("Linear-in").addEventListener("click", () => {
-    custom_menu.style.display = "none";
-  });
-
-  document.getElementById("Bezier").addEventListener("click", () => {
-    custom_menu.style.display = "none";
+    polygon_data[frame_n][select[0]].d[select[1]][select[2]].cpx = 10;
+    polygon_data[frame_n][select[0]].d[select[1]][select[2]].cpy = 10;
   });
 
   document.getElementById("gravity").addEventListener("input", () => {
