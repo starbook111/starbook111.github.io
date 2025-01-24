@@ -9,7 +9,7 @@ const height = document.getElementById("h");
 const explanation = document.getElementById("explanation");
 const new_project = document.getElementById("new");
 const set = document.getElementById("setting");
-const block = document.getElementById("block"); 
+const block = document.getElementById("block");
 const block_2 = document.getElementById("block_2");
 const block_3 = document.getElementById("block_3");
 const block_4 = document.getElementById("block_4");
@@ -389,6 +389,11 @@ document.getElementById("button").addEventListener("click", () => {
   const gameLoop = () => {
     const begin = Date.now();
     tick++;
+    if (start && tick % 2 === 0) {
+      time++;
+      slider_value.innerHTML = time;
+      handle.style.left = `${time + 20}px`;
+    }
     if (edit === 0) {
       if (tick % 2 === 0) {
         ctx.clearRect(0, 0, 1280, 720);
@@ -596,8 +601,8 @@ document.getElementById("button").addEventListener("click", () => {
           ctx.fillRect(player_x - scrollX, player_y - scrollY, 20, 20);
         }
 
-        Anime_data.forEach(animedata => {
-          polygon_data[animedata.number].forEach(polygon => {
+        Anime_data.forEach((animedata) => {
+          polygon_data[animedata.number].forEach((polygon) => {
             ctx.beginPath();
             let draw_number = polygon.d[0].length - 1;
             polygon.d[0].some((point_d, p_index) => {
@@ -607,33 +612,60 @@ document.getElementById("button").addEventListener("click", () => {
             });
             let draw_x = 0;
             let draw_y = 0;
-            if (draw_number === 0) {
+            if (draw_number === 0 || time > polygon.d[0][draw_number].t) {
               draw_x = polygon.d[0][draw_number].x;
               draw_y = polygon.d[0][draw_number].y;
             } else {
-              draw_x = polygon.d[0][draw_number - 1].x + (polygon.d[0][draw_number].x - polygon.d[0][draw_number - 1].x) * (time - polygon.d[0][draw_number - 1].t) / (polygon.d[0][draw_number].t - polygon.d[0][draw_number - 1].t);
-              draw_y = polygon.d[0][draw_number - 1].y + (polygon.d[0][draw_number].y - polygon.d[0][draw_number - 1].y) * (time - polygon.d[0][draw_number - 1].t) / (polygon.d[0][draw_number].t - polygon.d[0][draw_number - 1].t);
+              draw_x =
+                polygon.d[0][draw_number - 1].x +
+                ((polygon.d[0][draw_number].x -
+                  polygon.d[0][draw_number - 1].x) *
+                  (time - polygon.d[0][draw_number - 1].t)) /
+                  (polygon.d[0][draw_number].t -
+                    polygon.d[0][draw_number - 1].t);
+              draw_y =
+                polygon.d[0][draw_number - 1].y +
+                ((polygon.d[0][draw_number].y -
+                  polygon.d[0][draw_number - 1].y) *
+                  (time - polygon.d[0][draw_number - 1].t)) /
+                  (polygon.d[0][draw_number].t -
+                    polygon.d[0][draw_number - 1].t);
             }
             ctx.strokeStyle = "black";
-            ctx.moveTo(draw_x + animedata.x - scrollX, draw_y + animedata.y - scrollY);
-            polygon.d.forEach(point => {
+            ctx.moveTo(
+              draw_x + animedata.x - scrollX,
+              draw_y + animedata.y - scrollY
+            );
+            polygon.d.forEach((point) => {
               draw_number = point.length - 1;
               point.some((point_d, p_index) => {
                 if (point_d.t >= time) {
                   draw_number = p_index;
                 }
+                return true;
               });
-              if (draw_number === 0) {
+              if (draw_number === 0 || time > point[draw_number].t) {
                 draw_x = point[draw_number].x;
                 draw_y = point[draw_number].y;
               } else {
-                draw_x = point[draw_number - 1].x + (point[draw_number].x - point[draw_number - 1].x) * (time - point[draw_number - 1].t) / (point[draw_number].t - point[draw_number - 1].t);
-                draw_y = point[draw_number - 1].y + (point[draw_number].x - point[draw_number - 1].y) * (time - point[draw_number - 1].t) / (point[draw_number].t - point[draw_number - 1].t);
+                draw_x =
+                  point[draw_number - 1].x +
+                  ((point[draw_number].x - point[draw_number - 1].x) *
+                    (time - point[draw_number - 1].t)) /
+                    (point[draw_number].t - point[draw_number - 1].t);
+                draw_y =
+                  point[draw_number - 1].y +
+                  ((point[draw_number].y - point[draw_number - 1].y) *
+                    (time - point[draw_number - 1].t)) /
+                    (point[draw_number].t - point[draw_number - 1].t);
               }
               if (keys.ArrowUp) {
                 console.log(draw_x, draw_y);
               }
-              ctx.lineTo(draw_x + animedata.x - scrollX, draw_y + animedata.y - scrollY);
+              ctx.lineTo(
+                draw_x + animedata.x - scrollX,
+                draw_y + animedata.y - scrollY
+              );
             });
             if (polygon.close) {
               ctx.closePath();
@@ -672,11 +704,6 @@ document.getElementById("button").addEventListener("click", () => {
       choice.style.top = `${choice_y}px`;
     } else {
       ctx.clearRect(0, 0, 1280, 720);
-      if (start && tick % 2 == 0) {
-        time++;
-        slider_value.innerHTML = time;
-        handle.style.left = `${time + 20}px`;
-      }
       line_0 = false;
       line_1 = false;
       if (mode_2 == 2 && isMouseDown && cursor) {
@@ -1357,12 +1384,15 @@ document.getElementById("button").addEventListener("click", () => {
       } else {
         coordinate.style.display = "none";
       }
-      
     } else {
       Moving_icon.style.display = "none";
       coordinate.style.display = "none";
       if (Add_anime !== false) {
-        Anime_data.push({x:mouse_x + scrollX - 940, y: mouse_y + scrollY - 327, number:Number(Add_anime)});
+        Anime_data.push({
+          x: mouse_x + scrollX - 940,
+          y: mouse_y + scrollY - 327,
+          number: Number(Add_anime),
+        });
         Add_anime = false;
       }
     }
@@ -1721,15 +1751,17 @@ document.getElementById("button").addEventListener("click", () => {
         });
         frame_n = id;
         icon_e.classList.add("select");
-      })
-    , icon_e.addEventListener("mousemove", () => {
-      if (isMouseDown_2) {
-        icon_e.style.opacity = 0;
-        icon_push = icon_e.id;
-      }
-    }), icon_e.addEventListener("mouseout", () => {
+      }),
+      icon_e.addEventListener("mousemove", () => {
+        if (isMouseDown_2) {
+          icon_e.style.opacity = 0;
+          icon_push = icon_e.id;
+        }
+      }),
+      icon_e.addEventListener("mouseout", () => {
         icon_e.style.opacity = 1;
-    })]);
+      }),
+    ]);
     click_e[click_e.length - 1];
   };
 
@@ -1994,7 +2026,7 @@ document.getElementById("button").addEventListener("click", () => {
       `<svg xmlns="http://www.w3.org/2000/svg" width="540" height="405">
       <rect width="540" height="405" />
       </svg>`,
-    ],
+    ]
   ];
 
   document.getElementById("label_d").addEventListener("click", function () {
@@ -2013,6 +2045,7 @@ document.getElementById("button").addEventListener("click", () => {
             "S+8p+@wQM(qi-*DG2PC]": ["player x", 0],
             "EcO;L;k5IAWZlA-s`0CR": ["player y", 0],
             "{WG8L;z]k}]DSIo]@Uk@": ["jump level", 0],
+            "K@2#jx|!Thcp]Pyu:bUe": ["index", 0],
           },
           lists: {
             "Hv91qM{{A!%6e9!gs^{w": ["data", world_data_1],
@@ -2526,7 +2559,7 @@ document.getElementById("button").addEventListener("click", () => {
               md5ext: "2d6568bca66b266d8f00a41b4788e2cb.svg",
               rotationCenterX: 270.5,
               rotationCenterY: 202.5,
-            }
+            },
           ],
           sounds: [],
           volume: 100,
@@ -8537,6 +8570,7 @@ document.getElementById("button").addEventListener("click", () => {
         platform: { name: "TurboWarp", url: "https://turbowarp.org/" },
       },
     };
+
     const zip = new JSZip();
 
     for (let w = 0; w < Math.ceil(x / 480); w++) {
@@ -8626,6 +8660,10 @@ document.getElementById("button").addEventListener("click", () => {
     let layer = 4;
 
     splite_list.forEach((time_e, index) => {
+      let md5 = md5Hash();
+      zip.file(`${md5}.svg`, `<svg xmlns="http://www.w3.org/2000/svg" width="540" height="405">
+      <rect width="540" height="405" />
+      </svg>`);
       let splite_d = {
         isStage: false,
         name: `animation - ${index}`,
@@ -8635,7 +8673,17 @@ document.getElementById("button").addEventListener("click", () => {
         blocks: {},
         comments: {},
         currentCostume: 0,
-        costumes: [],
+        costumes: [
+          {
+            "name": "move",
+            "bitmapResolution": 1,
+            "dataFormat": "svg",
+            "assetId": `${md5}`,
+            "md5ext": `${md5}.svg`,
+            "rotationCenterX": 270.5,
+            "rotationCenterY": 202.5
+          },
+        ],
         sounds: [],
         volume: 100,
         layerOrder: layer,
@@ -8647,15 +8695,429 @@ document.getElementById("button").addEventListener("click", () => {
         draggable: false,
         rotationStyle: "all around",
       };
+      let data_n = [];
+      Anime_data.forEach((data) => {
+        if (data.number === index) {
+          data_n.push(data.x, data.y);
+        }
+      });
+      data.targets[0].lists[md5Hash()] = [`data${index}`, data_n];
+      let md5HashData = [];
+      let index_2 = 0;
+      while (index_2 < 32) {
+        index_2++;
+        md5HashData.push(String(md5Hash()));
+      }
+      let code_data = [
+        {
+          opcode: "event_whenflagclicked",
+          next: md5HashData[2],
+          parent: null,
+          inputs: {},
+          fields: {},
+          shadow: false,
+          topLevel: true,
+          x: 48,
+          y: 64,
+        },
+        {
+          opcode: "procedures_call",
+          next: null,
+          parent: md5HashData[2],
+          inputs: {},
+          fields: {},
+          shadow: false,
+          topLevel: false,
+          mutation: {
+            tagName: "mutation",
+            children: [],
+            proccode: "clone create",
+            argumentids: "[]",
+            warp: "true",
+          },
+        },
+        {
+          opcode: "looks_hide",
+          next: md5HashData[1],
+          parent: md5HashData[0],
+          inputs: {},
+          fields: {},
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "procedures_definition",
+          next: md5HashData[5],
+          parent: null,
+          inputs: {
+            custom_block: [1, md5HashData[4]],
+          },
+          fields: {},
+          shadow: false,
+          topLevel: true,
+          x: 48,
+          y: 288,
+        },
+        {
+          opcode: "procedures_prototype",
+          next: null,
+          parent: md5HashData[5],
+          inputs: {},
+          fields: {},
+          shadow: true,
+          topLevel: false,
+          mutation: {
+            tagName: "mutation",
+            children: [],
+            proccode: "clone create",
+            argumentids: "[]",
+            argumentnames: "[]",
+            argumentdefaults: "[]",
+            warp: "true",
+          },
+        },
+        {
+          opcode: "data_setvariableto",
+          next: md5HashData[6],
+          parent: md5HashData[3],
+          inputs: {
+            VALUE: [1, [10, "0"]],
+          },
+          fields: {
+            VARIABLE: ["index", "K@2#jx|!Thcp]Pyu:bUe"],
+          },
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "control_repeat",
+          next: null,
+          parent: md5HashData[5],
+          inputs: {
+            TIMES: [3, md5HashData[7], [6, ""]],
+            SUBSTACK: [2, md5HashData[9]],
+          },
+          fields: {},
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "operator_divide",
+          next: null,
+          parent: md5HashData[6],
+          inputs: {
+            NUM1: [3, md5HashData[8], [4, ""]],
+            NUM2: [1, [4, "2"]],
+          },
+          fields: {},
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "data_lengthoflist",
+          next: null,
+          parent: md5HashData[7],
+          inputs: {},
+          fields: {
+            LIST: [`data${index}`, "k5Y7q^xZrQ*AP:^ZD6q?"],
+          },
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "data_changevariableby",
+          next: md5HashData[10],
+          parent: md5HashData[6],
+          inputs: {
+            VALUE: [1, [4, "2"]],
+          },
+          fields: {
+            VARIABLE: ["index", "K@2#jx|!Thcp]Pyu:bUe"],
+          },
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "data_setvariableto",
+          next: md5HashData[13],
+          parent: md5HashData[9],
+          inputs: {
+            VALUE: [3, md5HashData[11], [10, ""]],
+          },
+          fields: {
+            VARIABLE: ["clone x", "|[+;@:v9=yuz)uz2p2HY"],
+          },
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "data_itemoflist",
+          next: null,
+          parent: md5HashData[10],
+          inputs: {
+            INDEX: [3, md5HashData[12], [7, ""]],
+          },
+          fields: {
+            LIST: [`data${index}`, "k5Y7q^xZrQ*AP:^ZD6q?"],
+          },
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "operator_subtract",
+          next: null,
+          parent: md5HashData[11],
+          inputs: {
+            NUM1: [3, [12, "index", "K@2#jx|!Thcp]Pyu:bUe"], [4, ""]],
+            NUM2: [1, [4, "1"]],
+          },
+          fields: {},
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "data_setvariableto",
+          next: md5HashData[15],
+          parent: md5HashData[10],
+          inputs: {
+            VALUE: [3, md5HashData[14], [10, ""]],
+          },
+          fields: {
+            VARIABLE: ["clone y", "/iKA37hK4TQl|U?spqr5"],
+          },
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "data_itemoflist",
+          next: null,
+          parent: md5HashData[13],
+          inputs: {
+            INDEX: [3, [12, "index", "K@2#jx|!Thcp]Pyu:bUe"], [7, ""]],
+          },
+          fields: {
+            LIST: [`data${index}`, , "k5Y7q^xZrQ*AP:^ZD6q?"],
+          },
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "control_create_clone_of",
+          next: null,
+          parent: md5HashData[13],
+          inputs: {
+            CLONE_OPTION: [1, md5HashData[16]],
+          },
+          fields: {},
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "control_create_clone_of_menu",
+          next: null,
+          parent: md5HashData[15],
+          inputs: {},
+          fields: {
+            CLONE_OPTION: ["_myself_", null],
+          },
+          shadow: true,
+          topLevel: false,
+        },
+        {
+          opcode: "control_start_as_clone",
+          next: md5HashData[18],
+          parent: null,
+          inputs: {},
+          fields: {},
+          shadow: false,
+          topLevel: true,
+          x: 48,
+          y: 784,
+        },
+        {
+          opcode: "looks_show",
+          next: md5HashData[19],
+          parent: md5HashData[17],
+          inputs: {},
+          fields: {},
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "data_setvariableto",
+          next: md5HashData[20],
+          parent: md5HashData[18],
+          inputs: {
+            VALUE: [1, [10, "2"]],
+          },
+          fields: {
+            VARIABLE: ["clone costume", "pKC{H1pn6IH`QFJp%)D3"],
+          },
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "control_forever",
+          next: null,
+          parent: md5HashData[19],
+          inputs: {
+            SUBSTACK: [2, md5HashData[21]],
+          },
+          fields: {},
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "data_changevariableby",
+          next: md5HashData[29],
+          parent: md5HashData[20],
+          inputs: {
+            VALUE: [1, [4, "1"]],
+          },
+          fields: {
+            VARIABLE: ["clone costume", "pKC{H1pn6IH`QFJp%)D3"],
+          },
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "motion_gotoxy",
+          next: md5HashData[25],
+          parent: md5HashData[27],
+          inputs: {
+            X: [3, md5HashData[23], [4, ""]],
+            Y: [3, md5HashData[24], [4, ""]],
+          },
+          fields: {},
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "operator_subtract",
+          next: null,
+          parent: md5HashData[22],
+          inputs: {
+            NUM1: [3, [12, "clone x", "|[+;@:v9=yuz)uz2p2HY"], [4, ""]],
+            NUM2: [3, [12, "scroll x", "Dvurghk]!y~Bh$7[2zA5"], [4, ""]],
+          },
+          fields: {},
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "operator_subtract",
+          next: null,
+          parent: md5HashData[22],
+          inputs: {
+            NUM1: [3, [12, "clone y", "/iKA37hK4TQl|U?spqr5"], [4, ""]],
+            NUM2: [3, [12, "scroll y", "2h8YgD*M18jG|aW4!Axy"], [4, ""]],
+          },
+          fields: {},
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "looks_switchcostumeto",
+          next: null,
+          parent: md5HashData[22],
+          inputs: {
+            COSTUME: [
+              3,
+              [12, "clone costume", "pKC{H1pn6IH`QFJp%)D3"],
+              md5HashData[26],
+            ],
+          },
+          fields: {},
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "looks_costume",
+          next: null,
+          parent: md5HashData[25],
+          inputs: {},
+          fields: {
+            COSTUME: ["move", null],
+          },
+          shadow: true,
+          topLevel: false,
+        },
+        {
+          opcode: "looks_switchcostumeto",
+          next: md5HashData[22],
+          parent: md5HashData[29],
+          inputs: {
+            COSTUME: [1, md5HashData[28]],
+          },
+          fields: {},
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "looks_costume",
+          next: null,
+          parent: md5HashData[27],
+          inputs: {},
+          fields: {
+            COSTUME: ["move", null],
+          },
+          shadow: true,
+          topLevel: false,
+        },
+        {
+          opcode: "control_if",
+          next: md5HashData[27],
+          parent: md5HashData[21],
+          inputs: {
+            SUBSTACK: [2, md5HashData[31]],
+            CONDITION: [2, md5HashData[30]],
+          },
+          fields: {},
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "operator_gt",
+          next: null,
+          parent: md5HashData[29],
+          inputs: {
+            OPERAND1: [
+              3,
+              [12, "clone costume", "pKC{H1pn6IH`QFJp%)D3"],
+              [10, ""],
+            ],
+            OPERAND2: [1, [10, String(time_e.length + 1)]],
+          },
+          fields: {},
+          shadow: false,
+          topLevel: false,
+        },
+        {
+          opcode: "data_setvariableto",
+          next: null,
+          parent: md5HashData[29],
+          inputs: {
+            VALUE: [1, [10, "2"]],
+          },
+          fields: {
+            VARIABLE: ["clone costume", "pKC{H1pn6IH`QFJp%)D3"],
+          },
+          shadow: false,
+          topLevel: false,
+        },
+      ];
+      code_data.forEach((code, c_index) => {
+        splite_d.blocks[md5HashData[c_index]] = code;
+      });
       time_e.forEach((svg_e, index_2) => {
-        let md5 = md5Hash();
-        zip.file(`${md5}.svg`, svg_e);
+        let md5_2 = md5Hash();
+        zip.file(`${md5_2}.svg`, svg_e);
         splite_d.costumes.push({
           name: `${index}_${index_2}`,
           bitmapResolution: 1,
           dataFormat: "svg",
-          assetId: md5,
-          md5ext: `${md5}.svg`,
+          assetId: md5_2,
+          md5ext: `${md5_2}.svg`,
           rotationCenterX: 240,
           rotationCenterY: 180,
         });
