@@ -274,7 +274,7 @@ document.getElementById("button").addEventListener("click", () => {
 
   let edit = 0;
 
-  let color_b = "rgb(230, 230, 230)";
+  let color_b = "rgb(0, 0, 0)";
   let f_color = "rgb(0, 0, 0)";
   let s_color = "rgb(0, 0, 0)";
 
@@ -316,6 +316,10 @@ document.getElementById("button").addEventListener("click", () => {
   let choice = document.getElementById("choice");
   const Moving_icon = document.getElementById("Moving_icon");
   const coordinate = document.getElementById("coordinate");
+  const color_picker = document.getElementById("color-picker");
+  const color_picker_2 = document.getElementById("color-picker-2");
+  const color_picker_3 = document.getElementById("color-picker-3");
+  const color_picker_4 = document.getElementById("color-picker-4");
 
   const rotate_arrow = new Image();
   rotate_arrow.src = "./icon/rotate_arrow.svg";
@@ -376,7 +380,9 @@ document.getElementById("button").addEventListener("click", () => {
 
   let caret = document.getElementById("caret-right");
   let Settings_screen = document.getElementById("Settings_screen");
-  let tab = document.getElementById("tab");
+  let setting_element = document.getElementById("setting");
+  let fill = document.getElementById("fill");
+  let stroke = document.getElementById("stroke_e");
 
   let img = new Image();
 
@@ -429,8 +435,8 @@ document.getElementById("button").addEventListener("click", () => {
               }
             });
           } else {
-            scrollX += (player_x - scrollX - 375) * 0.1;
-            scrollY += (player_y - scrollY - 207.5) * 0.1;
+            scrollX += (player_x - scrollX - 300) * 0.1;
+            scrollY += (player_y - scrollY - 162) * 0.1;
           }
 
           if (keys.ArrowRight) {
@@ -576,12 +582,12 @@ document.getElementById("button").addEventListener("click", () => {
               if (data[i] === "0") {
                 svg += `<rect x="${i * 20}" y="${
                   index * 20
-                }" width="20" height="20" fill="${color_b}"/>`;
+                }" width="20" height="20" fill="azure"/>`;
               }
               if (data[i] === "1") {
                 svg += `<rect x="${i * 20}" y="${
                   index * 20
-                }" width="20" height="20" fill="azure"/>`;
+                }" width="20" height="20" fill="${color_b}"/>`;
               }
             }
           });
@@ -599,7 +605,7 @@ document.getElementById("button").addEventListener("click", () => {
         ctx.drawImage(drawimg, 0 - scrollX, 0 - scrollY, x, y);
 
         if (flag) {
-          ctx.fillStyle = "white";
+          ctx.fillStyle = "lightblue";
           ctx.fillRect(player_x - scrollX, player_y - scrollY, 20, 20);
         }
 
@@ -698,9 +704,14 @@ document.getElementById("button").addEventListener("click", () => {
       }
       caret.style.transform = `rotate(${caret_angle}deg)`;
       Settings_screen.style.height = `${caret_angle * 2.5}px`;
+      Settings_screen.style.display = "block";
+      setting_element.style.display = "block";
+      caret.style.display = "block";
       div_5.style.display = "none";
       choice.style.left = `${choice_x}px`;
       choice.style.top = `${choice_y}px`;
+      fill.style.display = "none";
+      stroke.style.display = "none";
     } else {
       ctx.clearRect(0, 0, 1280, 720);
       line_0 = false;
@@ -836,7 +847,12 @@ document.getElementById("button").addEventListener("click", () => {
                   ctx.lineTo(point_X, point_Y);
                 }
                 if (point[timeline].k === "q") {
-                  ctx.quadraticCurveTo(point[timeline].cpx, point[timeline].cpy, point_X, point_Y);
+                  ctx.quadraticCurveTo(
+                    point[timeline].cpx,
+                    point[timeline].cpy,
+                    point_X,
+                    point_Y
+                  );
                   ctx.lineTo(point[timeline].cpx, point[timeline].cpy);
                   ctx.lineTo(point_X, point_Y);
                 }
@@ -909,13 +925,27 @@ document.getElementById("button").addEventListener("click", () => {
                 ctx.lineTo(point_X, point_Y);
               }
               if (point[timeline].k === "q") {
-                ctx.quadraticCurveTo(point[timeline].cpx, point[timeline].cpy, point_X, point_Y);
+                ctx.quadraticCurveTo(
+                  point[timeline].cpx,
+                  point[timeline].cpy,
+                  point_X,
+                  point_Y
+                );
                 ctx.lineTo(point[timeline].cpx, point[timeline].cpy);
                 ctx.lineTo(point_X, point_Y);
-                if (isMouseDown && point[timeline].cpx > pointerX - 5 && point[timeline].cpx < pointerX + 5 && point[timeline].cpy > pointerY - 5 && point[timeline].cpy < pointerY + 5 || push_point === point[timeline].id) {
+                if (
+                  (isMouseDown &&
+                    point[timeline].cpx > pointerX - 5 &&
+                    point[timeline].cpx < pointerX + 5 &&
+                    point[timeline].cpy > pointerY - 5 &&
+                    point[timeline].cpy < pointerY + 5) ||
+                  push_point === point[timeline].id
+                ) {
                   push_point = point[timeline].id;
-                  polygon_data[frame_n][index].d[index_2][timeline].cpx = pointerX;
-                  polygon_data[frame_n][index].d[index_2][timeline].cpy = pointerY;
+                  polygon_data[frame_n][index].d[index_2][timeline].cpx =
+                    pointerX;
+                  polygon_data[frame_n][index].d[index_2][timeline].cpy =
+                    pointerY;
                 }
               }
             }
@@ -1281,6 +1311,11 @@ document.getElementById("button").addEventListener("click", () => {
       }
       choice.style.left = `${choice_x2}px`;
       choice.style.top = `${choice_y2}px`;
+      Settings_screen.style.display = "none";
+      setting_element.style.display = "none";
+      caret.style.display = "none";
+      fill.style.display = "block";
+      stroke.style.display = "block";
     }
 
     if (mouse_x <= 150 && mouse_x <= 200 && mouse_y >= 150 && mouse_y <= 200) {
@@ -1848,9 +1883,45 @@ document.getElementById("button").addEventListener("click", () => {
 
   document.getElementById("Linear-Out").addEventListener("click", () => {
     custom_menu.style.display = "none";
+    let p_data = polygon_data[frame_n][select[0]].d[select[1]][select[2]];
+    let p_data_2 = 0;
+    if (select[1] === 0) {
+      if (
+        polygon_data[frame_n][select[0]].d[select[1] + 1].length - 1 >
+        select[2]
+      ) {
+        p_data_2 = polygon_data[frame_n][select[0]].d[select[1] + 1][select[2]];
+        console.log(1);
+      } else {
+        p_data_2 =
+          polygon_data[frame_n][select[0]].d[select[1] + 1][
+            polygon_data[frame_n][select[0]].d[select[1] + 1].length - 1
+          ];
+        console.log(2);
+      }
+    } else {
+      if (
+        polygon_data[frame_n][select[0]].d[select[1] - 1].length - 1 >
+        select[2]
+      ) {
+        p_data_2 = polygon_data[frame_n][select[0]].d[select[1] - 1][select[2]];
+        console.log(3);
+      } else {
+        p_data_2 =
+          polygon_data[frame_n][select[0]].d[select[1] - 1][
+            polygon_data[frame_n][select[0]].d[select[1] - 1].length - 1
+          ];
+      }
+    }
+    let distance = Math.sqrt(
+      (p_data.x - p_data_2.x) ** 2 + (p_data.y - p_data_2.y) ** 2
+    );
+    let angle = Math.asin((p_data.y - p_data_2.y) / distance);
     polygon_data[frame_n][select[0]].d[select[1]][select[2]].k = "q";
-    polygon_data[frame_n][select[0]].d[select[1]][select[2]].cpx = 10;
-    polygon_data[frame_n][select[0]].d[select[1]][select[2]].cpy = 10;
+    polygon_data[frame_n][select[0]].d[select[1]][select[2]].cpx =
+      p_data.x + Math.sin(angle + 45) * 100;
+    polygon_data[frame_n][select[0]].d[select[1]][select[2]].cpy =
+      p_data.y + Math.sin(angle + 45) * 100;
   });
 
   document.getElementById("gravity").addEventListener("input", () => {
@@ -1968,6 +2039,7 @@ document.getElementById("button").addEventListener("click", () => {
       preferredFormat: "rgb",
       change: function (color) {
         color_b = color.toRgbString();
+        change = true;
       },
     });
 
@@ -2031,7 +2103,7 @@ document.getElementById("button").addEventListener("click", () => {
       `<svg xmlns="http://www.w3.org/2000/svg" width="540" height="405">
       <rect width="540" height="405" />
       </svg>`,
-    ]
+    ],
   ];
 
   document.getElementById("label_d").addEventListener("click", function () {
@@ -8623,12 +8695,12 @@ document.getElementById("button").addEventListener("click", () => {
       for (let Time = 0; Time <= l_time; Time++) {
         let svg_list = `<svg xmlns="http://www.w3.org/2000/svg" width="480px" height="360px">`;
         splite.forEach((polygon) => {
-          let svg_e = "polyline";
+          let svg_e = "";
           if (polygon.close) {
-            svg_e = "polygon";
+            svg_e = "z";
           }
-          let polygon_list = `<${svg_e} fill="${polygon.f_color}" stroke="${polygon.s_color}" points="`;
-          polygon.d.forEach((point) => {
+          let polygon_list = `<path fill="${polygon.f_color}" stroke="${polygon.s_color}" d="`;
+          polygon.d.forEach((point, index) => {
             timeline = point.length - 1;
             point.some((point_d, index_3) => {
               if (point_d.t > Time) {
@@ -8651,9 +8723,17 @@ document.getElementById("button").addEventListener("click", () => {
               point_X = point[timeline].x;
               point_Y = point[timeline].y;
             }
-            polygon_list = `${polygon_list}${point_X}, ${point_Y} `;
+            if (index === 0) {
+              polygon_list = `${polygon_list}M ${point_X}, ${point_Y} `;
+            } else {
+              if (point[timeline].k === "l") {
+                polygon_list = `${polygon_list}L ${point_X}, ${point_Y} `;
+              } else {
+                polygon_list = `${polygon_list}Q ${point[timeline].cpx} ${point[timeline].cpy} ${point_X}, ${point_Y} `;
+              }
+            }
           });
-          polygon_list = `${polygon_list}"/>`;
+          polygon_list = `${polygon_list}${svg_e}"/>`;
           svg_list = `${svg_list}${polygon_list}`;
         });
         svg_list = `${svg_list}</svg>`;
@@ -8666,9 +8746,12 @@ document.getElementById("button").addEventListener("click", () => {
 
     splite_list.forEach((time_e, index) => {
       let md5 = md5Hash();
-      zip.file(`${md5}.svg`, `<svg xmlns="http://www.w3.org/2000/svg" width="540" height="405">
+      zip.file(
+        `${md5}.svg`,
+        `<svg xmlns="http://www.w3.org/2000/svg" width="540" height="405">
       <rect width="540" height="405" />
-      </svg>`);
+      </svg>`
+      );
       let splite_d = {
         isStage: false,
         name: `animation - ${index}`,
@@ -8680,13 +8763,13 @@ document.getElementById("button").addEventListener("click", () => {
         currentCostume: 0,
         costumes: [
           {
-            "name": "move",
-            "bitmapResolution": 1,
-            "dataFormat": "svg",
-            "assetId": `${md5}`,
-            "md5ext": `${md5}.svg`,
-            "rotationCenterX": 270.5,
-            "rotationCenterY": 202.5
+            name: "move",
+            bitmapResolution: 1,
+            dataFormat: "svg",
+            assetId: `${md5}`,
+            md5ext: `${md5}.svg`,
+            rotationCenterX: 270.5,
+            rotationCenterY: 202.5,
           },
         ],
         sounds: [],
