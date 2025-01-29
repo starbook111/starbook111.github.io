@@ -1887,10 +1887,10 @@ document.getElementById("button").addEventListener("click", () => {
     let p_data_2 = 0;
     if (select[1] === 0) {
       if (
-        polygon_data[frame_n][select[0]].d[select[1] + 1].length - 1 >
+        polygon_data[frame_n][select[0]].d[1].length - 1 >
         select[2]
       ) {
-        p_data_2 = polygon_data[frame_n][select[0]].d[select[1] + 1][select[2]];
+        p_data_2 = polygon_data[frame_n][select[0]].d[1][select[2]];
         console.log(1);
       } else {
         p_data_2 =
@@ -1911,6 +1911,7 @@ document.getElementById("button").addEventListener("click", () => {
           polygon_data[frame_n][select[0]].d[select[1] - 1][
             polygon_data[frame_n][select[0]].d[select[1] - 1].length - 1
           ];
+          console.log(4);
       }
     }
     let distance = Math.sqrt(
