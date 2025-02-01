@@ -261,6 +261,17 @@ document.getElementById("button").addEventListener("click", () => {
 
   let polygon_data = [];
 
+  const draw_data = [];
+
+  for (let j = 0; j < Math.ceil(y / 340); j++) {
+    draw_data.push([]);
+    for (let i = 0; i < Math.ceil(x / 600); i++) {
+      const img_data = new Image();
+      img_data.src = "./icon/game_b.svg";
+      draw_data[draw_data.length - 1].push(img_data);
+    }
+  }
+
   const orbitData = [{ x: 240, y: 180, t: 0 }];
 
   const Anime_data = [];
@@ -576,33 +587,44 @@ document.getElementById("button").addEventListener("click", () => {
         }
 
         if (change) {
-          let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${x}" height="${y}">`;
-          worldData.forEach((data, index) => {
-            for (let i = 0; i < data.length - 1; i++) {
-              if (data[i] === "0") {
+          let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="340">`;
+          for (let j = 0; j < 17; j++) {
+            for (let i = 0; i < 30; i++) {
+              if (worldData[Math.floor((scrollY + pointerY) / 340) * 17 + j][Math.floor((scrollX + pointerX) / 600) * 30 + i] === "0") {
                 svg += `<rect x="${i * 20}" y="${
-                  index * 20
+                  j * 20
                 }" width="20" height="20" fill="azure"/>`;
               }
-              if (data[i] === "1") {
+              if (worldData[Math.floor((scrollY + pointerY) / 340) * 17 + j][Math.floor((scrollX + pointerX) / 600) * 30 + i] === "1") {
                 svg += `<rect x="${i * 20}" y="${
-                  index * 20
+                  j * 20
                 }" width="20" height="20" fill="${color_b}"/>`;
               }
             }
-          });
+          }
           svg += "</svg>";
-          let blob = new Blob([svg], { type: "image/svg+xml" });
-          let url = URL.createObjectURL(blob);
-          img = new Image();
-          img.src = url;
-          img.onload = () => {
-            drawimg = img;
+          let encodedSvg = encodeURIComponent(svg);
+          let dataUrl = `data:image/svg+xml;charset=utf-8,${encodedSvg}`;
+          const img_data = new Image();
+          img_data.src = dataUrl;
+          img_data.onload = () => {
+            draw_data[Math.floor((scrollY + pointerY) / 340)][Math.floor((scrollX + pointerX) / 600)] = img_data;
           };
           change = false;
         }
 
-        ctx.drawImage(drawimg, 0 - scrollX, 0 - scrollY, x, y);
+        for (let j = Math.floor(scrollY / 340); j < Math.floor(scrollY / 340) + 2; j++) {
+          if (j < draw_data.length - 1) {
+            for (let i = Math.floor(scrollX / 600); i < Math.floor(scrollX / 600) + 2; i++) {
+              if (i >= 0 && j >= 0) {
+                if (i <= draw_data[j].length - 1) {
+                  ctx.drawImage(draw_data[j][i], i * 600 - scrollX, j * 340 - scrollY, 600, 340);
+                }
+              }
+              
+            }
+          }
+        }
 
         if (flag) {
           ctx.fillStyle = "lightblue";
@@ -1628,10 +1650,10 @@ document.getElementById("button").addEventListener("click", () => {
       }
       if (
         mode === 1 &&
-        event.pageX - rect.left + scrollX - 10 <= x &&
-        event.pageY - rect.top + scrollY < y &&
-        event.pageX - rect.left + scrollX - 10 >= 0 &&
-        event.pageY - rect.top + scrollY >= 0
+        event.pageX - rect.left + scrollX - 10 < x &&
+        event.pageY - rect.top + scrollY < y - 20 &&
+        event.pageX - rect.left + scrollX - 10 > 0 &&
+        event.pageY - rect.top + scrollY > 0
       ) {
         let w_data =
           worldData[Math.round((event.pageY - rect.top + scrollY - 10) / 20)];
@@ -1894,8 +1916,8 @@ document.getElementById("button").addEventListener("click", () => {
         console.log(1);
       } else {
         p_data_2 =
-          polygon_data[frame_n][select[0]].d[select[1] + 1][
-            polygon_data[frame_n][select[0]].d[select[1] + 1].length - 1
+          polygon_data[frame_n][select[0]].d[1][
+            polygon_data[frame_n][select[0]].d[1].length - 1
           ];
         console.log(2);
       }
