@@ -263,7 +263,7 @@ document.getElementById("button").addEventListener("click", () => {
 
   const draw_data = [];
 
-  for (let j = 0; j < Math.ceil(y / 340); j++) {
+  for (let j = 0; j < Math.ceil(y / 360); j++) {
     draw_data.push([]);
     for (let i = 0; i < Math.ceil(x / 600); i++) {
       const img_data = new Image();
@@ -587,18 +587,31 @@ document.getElementById("button").addEventListener("click", () => {
         }
 
         if (change) {
-          let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="340">`;
-          for (let j = 0; j < 17; j++) {
+          let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="360">`;
+          for (let j = 0; j < 18; j++) {
             for (let i = 0; i < 30; i++) {
-              if (worldData[Math.floor((scrollY + pointerY) / 340) * 17 + j][Math.floor((scrollX + pointerX) / 600) * 30 + i] === "0") {
-                svg += `<rect x="${i * 20}" y="${
-                  j * 20
-                }" width="20" height="20" fill="azure"/>`;
-              }
-              if (worldData[Math.floor((scrollY + pointerY) / 340) * 17 + j][Math.floor((scrollX + pointerX) / 600) * 30 + i] === "1") {
-                svg += `<rect x="${i * 20}" y="${
-                  j * 20
-                }" width="20" height="20" fill="${color_b}"/>`;
+              if (
+                Math.floor((scrollY + pointerY) / 360) * 18 + j <
+                worldData.length
+              ) {
+                if (
+                  worldData[Math.floor((scrollY + pointerY) / 360) * 18 + j][
+                    Math.floor((scrollX + pointerX) / 600) * 30 + i
+                  ] === "0"
+                ) {
+                  svg += `<rect x="${i * 20}" y="${
+                    j * 20
+                  }" width="20" height="20" fill="azure"/>`;
+                }
+                if (
+                  worldData[Math.floor((scrollY + pointerY) / 360) * 18 + j][
+                    Math.floor((scrollX + pointerX) / 600) * 30 + i
+                  ] === "1"
+                ) {
+                  svg += `<rect x="${i * 20}" y="${
+                    j * 20
+                  }" width="20" height="20" fill="${color_b}"/>`;
+                }
               }
             }
           }
@@ -608,20 +621,35 @@ document.getElementById("button").addEventListener("click", () => {
           const img_data = new Image();
           img_data.src = dataUrl;
           img_data.onload = () => {
-            draw_data[Math.floor((scrollY + pointerY) / 340)][Math.floor((scrollX + pointerX) / 600)] = img_data;
+            draw_data[Math.floor((scrollY + pointerY) / 360)][
+              Math.floor((scrollX + pointerX) / 600)
+            ] = img_data;
           };
           change = false;
         }
 
-        for (let j = Math.floor(scrollY / 340); j < Math.floor(scrollY / 340) + 2; j++) {
-          if (j < draw_data.length - 1) {
-            for (let i = Math.floor(scrollX / 600); i < Math.floor(scrollX / 600) + 2; i++) {
+        for (
+          let j = Math.floor(scrollY / 360);
+          j < Math.floor(scrollY / 360) + 2;
+          j++
+        ) {
+          if (j <= draw_data.length - 1) {
+            for (
+              let i = Math.floor(scrollX / 600);
+              i < Math.floor(scrollX / 600) + 2;
+              i++
+            ) {
               if (i >= 0 && j >= 0) {
                 if (i <= draw_data[j].length - 1) {
-                  ctx.drawImage(draw_data[j][i], i * 600 - scrollX, j * 340 - scrollY, 600, 340);
+                  ctx.drawImage(
+                    draw_data[j][i],
+                    i * 600 - scrollX,
+                    j * 360 - scrollY,
+                    600,
+                    360
+                  );
                 }
               }
-              
             }
           }
         }
@@ -1664,10 +1692,10 @@ document.getElementById("button").addEventListener("click", () => {
       }
       if (
         mode === 2 &&
-        event.pageX - rect.left + scrollX - 10 <= x &&
-        event.pageY - rect.top + scrollY < y &&
-        event.pageX - rect.left + scrollX - 10 >= 0 &&
-        event.pageY - rect.top + scrollY >= 0
+        event.pageX - rect.left + scrollX - 10 < x &&
+        event.pageY - rect.top + scrollY < y - 20 &&
+        event.pageX - rect.left + scrollX - 10 > 0 &&
+        event.pageY - rect.top + scrollY > 0
       ) {
         let rowData =
           worldData[Math.round((event.pageY - rect.top + scrollY - 10) / 20)];
@@ -1908,10 +1936,7 @@ document.getElementById("button").addEventListener("click", () => {
     let p_data = polygon_data[frame_n][select[0]].d[select[1]][select[2]];
     let p_data_2 = 0;
     if (select[1] === 0) {
-      if (
-        polygon_data[frame_n][select[0]].d[1].length - 1 >
-        select[2]
-      ) {
+      if (polygon_data[frame_n][select[0]].d[1].length - 1 > select[2]) {
         p_data_2 = polygon_data[frame_n][select[0]].d[1][select[2]];
         console.log(1);
       } else {
@@ -1933,7 +1958,7 @@ document.getElementById("button").addEventListener("click", () => {
           polygon_data[frame_n][select[0]].d[select[1] - 1][
             polygon_data[frame_n][select[0]].d[select[1] - 1].length - 1
           ];
-          console.log(4);
+        console.log(4);
       }
     }
     let distance = Math.sqrt(
