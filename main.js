@@ -235,6 +235,91 @@ document.getElementById("button").addEventListener("click", () => {
     return false;
   }
 
+  function replaceSvgElementsWithPaths(svg) {
+    const ns = "http://www.w3.org/2000/svg";
+
+    function convertToPath(element) {
+      let pathData = "";
+
+      if (element.tagName === "rect") {
+        let x = parseFloat(element.getAttribute("x") || 0);
+        let y = parseFloat(element.getAttribute("y") || 0);
+        let width = parseFloat(element.getAttribute("width") || 0);
+        let height = parseFloat(element.getAttribute("height") || 0);
+        pathData = `M${x},${y} h${width} v${height} h-${width} Z`;
+      } else if (element.tagName === "circle") {
+        let cx = parseFloat(element.getAttribute("cx") || 0);
+        let cy = parseFloat(element.getAttribute("cy") || 0);
+        let r = parseFloat(element.getAttribute("r") || 0);
+        pathData = `M ${cx - r},${cy} 
+                        A ${r},${r} 0 1,0 ${cx + r},${cy} 
+                        A ${r},${r} 0 1,0 ${cx - r},${cy} Z`;
+      } else if (element.tagName === "line") {
+        let x1 = parseFloat(element.getAttribute("x1") || 0);
+        let y1 = parseFloat(element.getAttribute("y1") || 0);
+        let x2 = parseFloat(element.getAttribute("x2") || 0);
+        let y2 = parseFloat(element.getAttribute("y2") || 0);
+        pathData = `M${x1},${y1} L${x2},${y2}`;
+      } else if (
+        element.tagName === "polygon" ||
+        element.tagName === "polyline"
+      ) {
+        let points = element
+          .getAttribute("points")
+          .trim()
+          .split(/\s+|,/)
+          .map(parseFloat);
+        if (points.length >= 4) {
+          pathData = `M${points[0]},${points[1]}`;
+          for (let i = 2; i < points.length; i += 2) {
+            pathData += ` L${points[i]},${points[i + 1]}`;
+          }
+          if (element.tagName === "polygon") pathData += " Z";
+        }
+      }
+
+      if (pathData) {
+        let path = document.createElementNS(ns, "path");
+        path.setAttribute("d", pathData);
+
+        // 元の属性をコピー（スタイルを維持）
+        for (let attr of element.attributes) {
+          if (
+            ![
+              "x",
+              "y",
+              "width",
+              "height",
+              "cx",
+              "cy",
+              "r",
+              "x1",
+              "y1",
+              "x2",
+              "y2",
+              "points",
+            ].includes(attr.name)
+          ) {
+            path.setAttribute(attr.name, attr.value);
+          }
+        }
+
+        return path;
+      }
+
+      return null;
+    }
+
+    // 変換対象の要素を取得
+    let elements = svg.querySelectorAll(
+      "rect, circle, line, polygon, polyline"
+    );
+    elements.forEach((element) => {
+      let path = convertToPath(element);
+      if (path) element.replaceWith(path);
+    });
+  }
+
   let player_x = 0;
   let player_y = 0;
 
@@ -592,7 +677,9 @@ document.getElementById("button").addEventListener("click", () => {
             for (let i = 0; i < 30; i++) {
               if (
                 Math.floor((scrollY + pointerY) / 360) * 18 + j <
-                worldData.length
+                  Math.round(y / 20) &&
+                Math.floor((scrollX + pointerX) / 600) * 30 + i <=
+                  Math.round(x / 20)
               ) {
                 if (
                   worldData[Math.floor((scrollY + pointerY) / 360) * 18 + j][
@@ -2051,24 +2138,23 @@ document.getElementById("button").addEventListener("click", () => {
   let count = 0;
 
   inp.addEventListener("change", (event) => {
-    let img = document.createElement("img");
-    img.setAttribute("width", "40px");
-    img.setAttribute("height", "40px");
-    img.setAttribute("class", "icon_3");
-    img.style.top = `${count * 90 + 83}px`;
-    img.setAttribute("id", count);
-    if (main_chara === 0) {
-      main_chara = img;
-    }
-    img_list.push(img);
-    div_2.appendChild(img_list[img_list.length - 1]);
     let file = event.target.files[0];
+    if (!file) return;
+
     let reader = new FileReader();
-    reader.onload = function () {
-      img_list[img_list.length - 1].src = reader.result;
+    reader.onload = function (e) {
+      let svgString = e.target.result;
+
+      let parser = new DOMParser();
+      let svgDoc = parser.parseFromString(svgString, "image/svg+xml");
+
+      let svgElement = svgDoc.documentElement;
+      replaceSvgElementsWithPaths(svgElement);
+      event.target.value = "";
+      console.log(svgElement);
     };
-    reader.readAsDataURL(file);
-    count++;
+
+    reader.readAsText(file);
   });
 
   $(document).ready(function () {
@@ -2487,9 +2573,27 @@ document.getElementById("button").addEventListener("click", () => {
               shadow: true,
               topLevel: false,
             },
+            hg: {
+              opcode: "looks_switchcostumeto",
+              next: "y",
+              parent: "f",
+              inputs: { COSTUME: [1, "hf"] },
+              fields: {},
+              shadow: false,
+              topLevel: false,
+            },
+            hf: {
+              opcode: "looks_costume",
+              next: null,
+              parent: "x",
+              inputs: {},
+              fields: { COSTUME: ["", null] },
+              shadow: true,
+              topLevel: false,
+            },
             g: {
               opcode: "motion_gotoxy",
-              next: "y",
+              next: "hg",
               parent: "x",
               inputs: { X: [3, "e^", [4, ""]], Y: [3, "e_", [4, ""]] },
               fields: {},
@@ -8741,7 +8845,7 @@ document.getElementById("button").addEventListener("click", () => {
         });
       });
       for (let Time = 0; Time <= l_time; Time++) {
-        let svg_list = `<svg xmlns="http://www.w3.org/2000/svg" width="480px" height="360px">`;
+        let svg_list = `<svg xmlns="http://www.w3.org/2000/svg" width="480px" height="360px" viewBox="0,0,480,360">`;
         splite.forEach((polygon) => {
           let svg_e = "";
           if (polygon.close) {
