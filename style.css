@@ -259,13 +259,14 @@ body {
 
 #Settings_screen {
     background-color: #707375;
-    width: 180px;
+    width: 240px;
     height: 240px;
     position: absolute;
     top: 250px;
-    left: 310px;
+    left: 280px;
     display: inline;
     border-radius: 3px;
+    list-style: none;
 }
 
 .settings {
@@ -276,6 +277,10 @@ body {
 #Auto-scroll {
     width: 40px;
     background-color: #007bff;
+}
+
+#Horizontal {
+    padding-right: 30px;
 }
 
 #gravity {

@@ -235,91 +235,6 @@ document.getElementById("button").addEventListener("click", () => {
     return false;
   }
 
-  function replaceSvgElementsWithPaths(svg) {
-    const ns = "http://www.w3.org/2000/svg";
-
-    function convertToPath(element) {
-      let pathData = "";
-
-      if (element.tagName === "rect") {
-        let x = parseFloat(element.getAttribute("x") || 0);
-        let y = parseFloat(element.getAttribute("y") || 0);
-        let width = parseFloat(element.getAttribute("width") || 0);
-        let height = parseFloat(element.getAttribute("height") || 0);
-        pathData = `M${x},${y} h${width} v${height} h-${width} Z`;
-      } else if (element.tagName === "circle") {
-        let cx = parseFloat(element.getAttribute("cx") || 0);
-        let cy = parseFloat(element.getAttribute("cy") || 0);
-        let r = parseFloat(element.getAttribute("r") || 0);
-        pathData = `M ${cx - r},${cy} 
-                        A ${r},${r} 0 1,0 ${cx + r},${cy} 
-                        A ${r},${r} 0 1,0 ${cx - r},${cy} Z`;
-      } else if (element.tagName === "line") {
-        let x1 = parseFloat(element.getAttribute("x1") || 0);
-        let y1 = parseFloat(element.getAttribute("y1") || 0);
-        let x2 = parseFloat(element.getAttribute("x2") || 0);
-        let y2 = parseFloat(element.getAttribute("y2") || 0);
-        pathData = `M${x1},${y1} L${x2},${y2}`;
-      } else if (
-        element.tagName === "polygon" ||
-        element.tagName === "polyline"
-      ) {
-        let points = element
-          .getAttribute("points")
-          .trim()
-          .split(/\s+|,/)
-          .map(parseFloat);
-        if (points.length >= 4) {
-          pathData = `M${points[0]},${points[1]}`;
-          for (let i = 2; i < points.length; i += 2) {
-            pathData += ` L${points[i]},${points[i + 1]}`;
-          }
-          if (element.tagName === "polygon") pathData += " Z";
-        }
-      }
-
-      if (pathData) {
-        let path = document.createElementNS(ns, "path");
-        path.setAttribute("d", pathData);
-
-        // 元の属性をコピー（スタイルを維持）
-        for (let attr of element.attributes) {
-          if (
-            ![
-              "x",
-              "y",
-              "width",
-              "height",
-              "cx",
-              "cy",
-              "r",
-              "x1",
-              "y1",
-              "x2",
-              "y2",
-              "points",
-            ].includes(attr.name)
-          ) {
-            path.setAttribute(attr.name, attr.value);
-          }
-        }
-
-        return path;
-      }
-
-      return null;
-    }
-
-    // 変換対象の要素を取得
-    let elements = svg.querySelectorAll(
-      "rect, circle, line, polygon, polyline"
-    );
-    elements.forEach((element) => {
-      let path = convertToPath(element);
-      if (path) element.replaceWith(path);
-    });
-  }
-
   let player_x = 0;
   let player_y = 0;
 
@@ -480,10 +395,6 @@ document.getElementById("button").addEventListener("click", () => {
   let fill = document.getElementById("fill");
   let stroke = document.getElementById("stroke_e");
 
-  let img = new Image();
-
-  let drawimg = new Image();
-
   const md5Hash = () => {
     return CryptoJS.MD5(
       Math.random().toString(36) + Date.now().toString(36)
@@ -491,7 +402,6 @@ document.getElementById("button").addEventListener("click", () => {
   };
 
   const gameLoop = () => {
-    const begin = Date.now();
     tick++;
     if (start && tick % 2 === 0) {
       time++;
@@ -672,6 +582,7 @@ document.getElementById("button").addEventListener("click", () => {
         }
 
         if (change) {
+          console.log("aaa");
           let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="360">`;
           for (let j = 0; j < 18; j++) {
             for (let i = 0; i < 30; i++) {
@@ -1579,8 +1490,7 @@ document.getElementById("button").addEventListener("click", () => {
         Add_anime = false;
       }
     }
-    const end = Date.now();
-    setTimeout(gameLoop, 16 - (end - begin));
+    requestAnimationFrame(gameLoop);
   };
 
   let click_x = 0;
@@ -2149,9 +2059,10 @@ document.getElementById("button").addEventListener("click", () => {
       let svgDoc = parser.parseFromString(svgString, "image/svg+xml");
 
       let svgElement = svgDoc.documentElement;
-      replaceSvgElementsWithPaths(svgElement);
+      let push_data = [];
+      
       event.target.value = "";
-      console.log(svgElement);
+      console.log(polygon_data);
     };
 
     reader.readAsText(file);
