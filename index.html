@@ -4,126 +4,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>scratch-platform-create</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.1/spectrum.min.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.1/spectrum.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.js"></script>
+  <link rel="stylesheet" href="./style.css">
+  <title>Code Canvas</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
 </head>
 
 <body>
-  <div id="home">
-    <img src="icon/block.svg" id="block" />
-    <img src="icon/block_2.svg" id="block_2" />
-    <img src="icon/block_3.svg" id="block_3" />
-    <img src="icon/block_4.svg" id="block_4" />
-    <img src="icon/block_5.svg" id="block_5" />
-    <img src="icon/block_6.svg" id="block_6" />
-    <div id="stroke"></div>
-    <h1 id="title">Scratch Platform Create</h1>
-    <div id="size">
-      <label id="w" class="label">width :<input type="number" value="24" id="width" class="size" /></label>
-      <label id="h" class="label">height :<input type="number" value="18" id="height" class="size" /></label>
-    </div>
-    <button id="button">create</button>
-    <h3 id="caution">*This site is still a work in progress</h3>
-    <h3 id="new">Create a New Scratch Project</h3>
-    <a href="https://starbook111.github.io/Terms-of-Use.html" target="_blank" id="terms_of_use">Terms of Use</a>
-    <a href="https://github.com/starbook111/starbook111.github.io" target="_blank" id="github">github</a>
-    <h3 id="explanation">The site makes it easy to create <a href="https://scratch.mit.edu/" target="_blank">Scratch</a>
-      platform games.</h3>
+  <div id="header">
+    <input id="Project-Name" type="text" value="project">
   </div>
-  <script src="./main.js" defer></script>
-  <div id="edit">
-    <div id="frame"></div>
-
-    <div id="choice"></div>
-
-    <div id="icons">
-      <img src="./icon/mouse-pointer.svg" class="icon" id="icon_0" width="40px" height="40px">
-      <img src="./icon/pen.svg" class="icon" id="icon_1" width="40px" height="40px">
-      <img src="./icon/eraser.svg" class="icon" id="icon_2" width="40px" height="40px">
-      <img src="./icon/rect.svg" class="icon" id="icon_3" width="40px" height="40px">
-      <img src="./icon/bucket.svg" class="icon" id="icon_4" width="40px" height="40px">
-      <img src="./icon/diagram-project.svg" class="icon" id="icon_12" width="40px" height="40px">
-    </div>
-
-    <img src="./icon/flag.svg" id="icon_5" width="40px" height="40px">
-
-    <img src="./icon/upload.svg" class="icon_2" id="icon_u" width="40px" height="40px">
-    <img src="./icon/create.svg" class="icon_2" id="icon_c" width="40px" height="40px">
-
-    <div id="icons_2"></div>
-
-    <input type="file" id="inp" accept=".svg">
-
-    <h2 class="edit" id="polygon">polygon</h2>
-    <h2 class="edit" id="world">world</h2>
-
-    <div id="rgb">
-      <label>background <input type="text" id="color-picker" class="color"></label>
-      <label>Tile color <input type="text" id="color-picker-2" class="color"></label>
-      <label id="fill">fill <input type="text" id="color-picker-3" class="color"></label>
-      <label id="stroke_e">stroke <input type="text" id="color-picker-4" class="color"></label>
-    </div>
-
-    <div id="header"></div>
-
-    <label id="label_d">
-      <img src="./icon/download.svg" id="icon_6" width="30px" height="30px">
-      <h2 id="text_d">download</h2>
-    </label>
-
-    <canvas id="screen" width="600px" height="324px" style="top:165px; left:640px;"></canvas>
-
-    <div id="Moving_icon"></div>
-    <rabel id="coordinate"></rabel>
-
-    <img id="var" src="./icon/var.svg">
-
-    <div id="icons_3">
-      <img src="./icon/polygon.svg" class="icon_2" id="icon_7" width="40px" height="40px">
-      <img src="./icon/move.svg" class="icon_2" id="icon_8" width="40px" height="40px">
-      <img src="./icon/pointer.svg" class="icon_2" id="icon_9" width="40px" height="40px">
-      <img src="./icon/rect.svg" class="icon_2" id="icon_10" , width="40px" height="40px">
-      <img src="./icon/fill.svg" class="icon_2" id="icon_11" width="40px" height="40px">
-    </div>
-
-    <label><img src="./icon/caret-right.svg" id="caret-right">
-      <h3 id="setting">setting</h3>
-    </label>
-
-    <ul id="Settings_screen">
-      <li id="tab"><input type="checkbox" id="Auto-scroll">Multi-Directional Scrolling</li>
-      <li id="Horizontal"><input type="checkbox">Horizontal Scrolling</li>
-      <li id="Vertical"><input type="checkbox">Vertical Auto-Scrolling</li>
-      <li class="settings">gravity : <input type="number" value="2" id="gravity"></li>
-      <li class="settings">Player-speed : <input type="number" value="4" id="Player-speed"></li>
-      <li class="settings">Air-Resistance : <input type="number" value="0.8" id="Air-Resistance"></li>
-    </ul>
-
-    <div id="text">
-      <h2 id="animation" class="type">・animation</h2>
-      <h2 id="gimmick" class="type">・gimmick</h2>
-    </div>
-
-    <img src="./icon/expand.svg" id="expand">
-    <img src="./icon/compress.svg" id="compress">
-    <div class="value-display">fps: <span id="slider-value">0</span> tick</div>
-    <div class="controls">
-      <button id="toggle-btn">play</button>
-    </div>
-    <div id="slider"></div>
-    <div id="handle"></div>
-    <div id="custom_menu"><label class="icon_4" id="linear"><img class="icon_3"
-          src="./icon/diamond.svg">liner</label><label class="icon_4" id="Linear-Out"><img class="icon_3"
-          src="./icon/angles-left.svg">curve</label>
-    </div>
-    <img src="./icon/sun.svg" id="circle-half-stroke">
+  <div id="Control-button">
+    <img class="Control-button" src="./images/play.svg" alt="">
+    <img class="Control-button" src="./images/stop.svg" alt="">
+  </div>
+  <div id="Sidebar">
+    <img class="tool selected" src="./images/draw.svg" alt="">
+    <img class="tool" src="./images/erase.svg" alt="">
+    <img class="tool" src="./images/drag.svg" alt="">
+    <div id="TileColorPalette" class="tool"></div>
+  </div>
+  <p id="file">ファイル</p>
+  <canvas width="533.3333333333334" height="400" id="edit"></canvas>
+  <div id="Sprite-list">
+  </div>
+  <canvas id="screen" width="540" height="405"></canvas>
+  <script type="module" src="./main.js"></script>
 </body>
 
 </html>
