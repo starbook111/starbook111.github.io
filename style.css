@@ -35,6 +35,28 @@
   -webkit-user-drag: none;
 }
 
+#mode {
+  position: absolute;
+  top: 43px;
+  left: 10px;
+}
+
+.mode {
+  color: white;
+  padding: 5px 10px 5px 10px;
+  float: left;
+  font-weight: 500;
+  user-select: none;
+}
+
+.mode:hover {
+  background-color: rgb(50, 50, 50);
+}
+
+.mode.selected {
+  background-color: rgb(75, 75, 75);
+}
+
 .Control-button:hover {
   border-radius: 5px;
   background-color: rgba(0, 230, 255, 0.2);

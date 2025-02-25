@@ -20,6 +20,8 @@ let green = 0;
 
 const worldData = [];
 
+const polygonData = [];
+
 const firstValue = [
   "000000000000000000000000",
   "000000000000000000000000",
@@ -90,7 +92,22 @@ ControlButton.forEach((button) => {
   });
 });
 
-const drawingInEdit = () => {
+const modeElement = document.querySelectorAll('p[class="mode"]');
+console.log(modeElement);
+modeElement.forEach((button) => {
+  button.addEventListener("click", () => {
+    modeElement.forEach((t) => t.classList.remove("selected"));
+    button.classList.add("selected");
+  });
+});
+
+modeElement[0].setAttribute("class", "mode selected");
+
+const drawingInAnimation = () => {
+  editCtx.clearRect(0, 0, 600, 450);
+}
+
+const drawingInWorld = () => {
   editCtx.clearRect(0, 0, 600, 450);
   worldData
     .filter(
@@ -188,7 +205,7 @@ edit.addEventListener("mousemove", (event) => {
       ].data[Math.floor(clientY / 20) % 18][Math.floor(clientX / 20) % 24] =
         "0";
     }
-    drawingInEdit();
+    drawingInWorld();
   }
 });
 
