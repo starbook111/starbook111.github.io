@@ -18,6 +18,8 @@ let red = 0;
 let blue = 0;
 let green = 0;
 
+let mode = "code";
+
 const worldData = [];
 
 const polygonData = [];
@@ -93,11 +95,18 @@ ControlButton.forEach((button) => {
 });
 
 const modeElement = document.querySelectorAll('p[class="mode"]');
-console.log(modeElement);
 modeElement.forEach((button) => {
   button.addEventListener("click", () => {
     modeElement.forEach((t) => t.classList.remove("selected"));
     button.classList.add("selected");
+    if (button.textContent === "code") {
+      mode = "code";
+    }
+    else if (button.textContent === "animation") {
+      mode = "animation";
+    } else if (button.textContent === "world") {
+      mode = "world";
+    }
   });
 });
 
@@ -150,60 +159,65 @@ edit.addEventListener("mouseup", () => {
 
 edit.addEventListener("mousemove", (event) => {
   if (isMouseDown) {
-    if (currentTool === "drag") {
-      cameraX = pressedLocationX - event.clientX / (10 / 9);
-      cameraY = pressedLocationY - event.clientY / (10 / 9);
+    if (mode === "animation") {
+      drawingInAnimation();
     }
-    if (currentTool === "draw") {
-      let clientX = (event.clientX - 80) / (10 / 9) + cameraX;
-      let clientY = (event.clientY - 110) / (10 / 9) + cameraY;
-      let chunkExist = worldData.some(
-        (Chunk) =>
-          Chunk.x === Math.floor(clientX / 480) &&
-          Chunk.y === Math.floor(clientY / 360)
-      );
-      if (!chunkExist) {
-        const newChunkData = firstValue.map((row) => [...row]);
-        worldData.push({
-          x: Math.floor(clientX / 480),
-          y: Math.floor(clientY / 360),
-          data: newChunkData,
-        });
+    if (mode === "world") {
+      if (currentTool === "drag") {
+        cameraX = pressedLocationX - event.clientX / (10 / 9);
+        cameraY = pressedLocationY - event.clientY / (10 / 9);
       }
-      worldData[
-        worldData.findIndex(
+      if (currentTool === "draw") {
+        let clientX = (event.clientX - 80) / (10 / 9) + cameraX;
+        let clientY = (event.clientY - 110) / (10 / 9) + cameraY;
+        let chunkExist = worldData.some(
           (Chunk) =>
             Chunk.x === Math.floor(clientX / 480) &&
             Chunk.y === Math.floor(clientY / 360)
-        )
-      ].data[mod(Math.floor(clientY / 20), 18)][
-        mod(Math.floor(clientX / 20), 24)
-      ] = "1";
-    }
-    if (currentTool === "erase") {
-      let clientX = (event.clientX - 80) / (10 / 9) + cameraX;
-      let clientY = (event.clientY - 110) / (10 / 9) + cameraY;
-      let chunkExist = worldData.some(
-        (Chunk) =>
-          Chunk.x === Math.floor(clientX / 480) &&
-          Chunk.y === Math.floor(clientY / 360)
-      );
-      if (!chunkExist) {
-        const newChunkData = firstValue.map((row) => [...row]);
-        worldData.push({
-          x: Math.floor(clientX / 480),
-          y: Math.floor(clientY / 360),
-          data: newChunkData,
-        });
+        );
+        if (!chunkExist) {
+          const newChunkData = firstValue.map((row) => [...row]);
+          worldData.push({
+            x: Math.floor(clientX / 480),
+            y: Math.floor(clientY / 360),
+            data: newChunkData,
+          });
+        }
+        worldData[
+          worldData.findIndex(
+            (Chunk) =>
+              Chunk.x === Math.floor(clientX / 480) &&
+              Chunk.y === Math.floor(clientY / 360)
+          )
+        ].data[mod(Math.floor(clientY / 20), 18)][
+          mod(Math.floor(clientX / 20), 24)
+        ] = "1";
       }
-      worldData[
-        worldData.findIndex(
+      if (currentTool === "erase") {
+        let clientX = (event.clientX - 80) / (10 / 9) + cameraX;
+        let clientY = (event.clientY - 110) / (10 / 9) + cameraY;
+        let chunkExist = worldData.some(
           (Chunk) =>
             Chunk.x === Math.floor(clientX / 480) &&
             Chunk.y === Math.floor(clientY / 360)
-        )
-      ].data[Math.floor(clientY / 20) % 18][Math.floor(clientX / 20) % 24] =
-        "0";
+        );
+        if (!chunkExist) {
+          const newChunkData = firstValue.map((row) => [...row]);
+          worldData.push({
+            x: Math.floor(clientX / 480),
+            y: Math.floor(clientY / 360),
+            data: newChunkData,
+          });
+        }
+        worldData[
+          worldData.findIndex(
+            (Chunk) =>
+              Chunk.x === Math.floor(clientX / 480) &&
+              Chunk.y === Math.floor(clientY / 360)
+          )
+        ].data[Math.floor(clientY / 20) % 18][Math.floor(clientX / 20) % 24] =
+          "0";
+      }
     }
     drawingInWorld();
   }
