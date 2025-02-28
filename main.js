@@ -12,7 +12,8 @@ let pressedLocationY = 0;
 
 let isMouseDown = false;
 
-let currentTool = "draw";
+let worldCurrentTool = "draw";
+let animationCurrentTool = "line";
 
 let red = 0;
 let blue = 0;
@@ -51,28 +52,48 @@ const ColorVariations = {
 
 const dragTool = document.querySelector('img[src="./images/drag.svg"]');
 const drawTool = document.querySelector('img[src="./images/draw.svg"]');
-const eraseTool = document.querySelector('img[src="./images/erase.svg"]');
+const worldEraseTool = document.querySelector('img[src="./images/erase.svg"]');
 
 const TileColorPalette = document.getElementById("TileColorPalette");
 TileColorPalette.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
 
-const tools = [drawTool, eraseTool, dragTool];
+const worldTools = [drawTool, worldEraseTool, dragTool];
 
-tools.forEach((tool) => {
+worldTools.forEach((tool) => {
   tool.addEventListener("click", () => {
-    tools.forEach((t) => t.classList.remove("selected"));
+    worldTools.forEach((t) => t.classList.remove("selected"));
     tool.classList.add("selected");
     if (tool === drawTool) {
-      currentTool = "draw";
+      worldCurrentTool = "draw";
     }
-    if (tool === eraseTool) {
-      currentTool = "erase";
+    if (tool === worldEraseTool) {
+      worldCurrentTool = "erase";
     }
     if (tool === dragTool) {
-      currentTool = "drag";
+      worldCurrentTool = "drag";
     }
   });
 });
+
+const lineTool = document.querySelector('img[src="./images/line.svg"]');
+const animationEraseTool = document.getElementById("animationErase");
+
+const animationTool = [lineTool, animationEraseTool];
+
+animationTool.forEach((tool) => {
+  tool.addEventListener("click", () => {
+    animationTool.forEach((t) => t.classList.remove("selected"));
+    tool.classList.add("selected");
+    if (tool === lineTool) {
+      animationCurrentTool = "line";
+    }
+    if (tool === animationEraseTool) {
+      animationCurrentTool = "erase";
+    }
+  });
+});
+
+lineTool.classList.add("selected");
 
 const playButton = document.querySelector('img[src="./images/play.svg"]');
 const stopButton = document.querySelector('img[src="./images/stop.svg"]');
@@ -95,6 +116,9 @@ ControlButton.forEach((button) => {
 });
 
 const modeElement = document.querySelectorAll('p[class="mode"]');
+const WorldSidebar = document.getElementById("WorldSidebar");
+const AnimationSideber = document.getElementById("AnimationSideber");
+
 modeElement.forEach((button) => {
   button.addEventListener("click", () => {
     modeElement.forEach((t) => t.classList.remove("selected"));
@@ -104,13 +128,17 @@ modeElement.forEach((button) => {
     }
     else if (button.textContent === "animation") {
       mode = "animation";
+      AnimationSideber.classList.add("selected");
+      WorldSidebar.classList.remove("selected");
     } else if (button.textContent === "world") {
       mode = "world";
+      WorldSidebar.classList.add("selected");
+      AnimationSideber.classList.remove("selected");
     }
   });
 });
 
-modeElement[0].setAttribute("class", "mode selected");
+modeElement[0].classList.add("selected");
 
 const drawingInAnimation = () => {
   editCtx.clearRect(0, 0, 600, 450);
@@ -163,11 +191,11 @@ edit.addEventListener("mousemove", (event) => {
       drawingInAnimation();
     }
     if (mode === "world") {
-      if (currentTool === "drag") {
+      if (worldCurrentTool === "drag") {
         cameraX = pressedLocationX - event.clientX / (10 / 9);
         cameraY = pressedLocationY - event.clientY / (10 / 9);
       }
-      if (currentTool === "draw") {
+      if (worldCurrentTool === "draw") {
         let clientX = (event.clientX - 80) / (10 / 9) + cameraX;
         let clientY = (event.clientY - 110) / (10 / 9) + cameraY;
         let chunkExist = worldData.some(
@@ -193,7 +221,7 @@ edit.addEventListener("mousemove", (event) => {
           mod(Math.floor(clientX / 20), 24)
         ] = "1";
       }
-      if (currentTool === "erase") {
+      if (worldCurrentTool === "erase") {
         let clientX = (event.clientX - 80) / (10 / 9) + cameraX;
         let clientY = (event.clientY - 110) / (10 / 9) + cameraY;
         let chunkExist = worldData.some(
@@ -225,6 +253,17 @@ edit.addEventListener("mousemove", (event) => {
 
 edit.addEventListener("mouseleave", () => {
   isMouseDown = false;
+});
+
+const addPolygon = document.getElementById("addPolygon");
+const addSelection = document.getElementById("addSelection");
+
+addPolygon.addEventListener("mouseenter", () => {
+  addSelection.classList.add("hover");
+});
+
+addPolygon.addEventListener("mouseleave", () => {
+  addSelection.classList.remove("hover");
 });
 
 fileExport();

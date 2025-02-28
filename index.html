@@ -9,6 +9,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 </head>
 
 <body>
@@ -24,15 +25,25 @@
     <p class="mode">animation</p>
     <p class="mode">world</p>
   </div>
-  <div id="Sidebar">
+  <div id="WorldSidebar">
     <img class="tool selected" src="./images/draw.svg" alt="">
     <img class="tool" src="./images/erase.svg" alt="">
     <img class="tool" src="./images/drag.svg" alt="">
     <div id="TileColorPalette" class="tool"></div>
   </div>
+  <div id="AnimationSideber">
+    <img class="tool" src="./images/line.svg" alt="">
+    <img class="tool" id="animationErase" src="./images/erase.svg" alt="">
+  </div>
   <p id="file">ファイル</p>
   <canvas width="533.3333333333334" height="400" id="edit"></canvas>
   <div id="Sprite-list">
+    <img id="addPolygon" src="./images/polygon.svg" alt="">
+    <div id="addSelection">
+      <img src="./images/draw.svg" alt="">
+      <img src="./images/drag.svg" alt="">
+      <img src="./images/drag.svg" alt="">
+    </div>
   </div>
   <canvas id="screen" width="540" height="405"></canvas>
   <script type="module" src="./main.js"></script>
