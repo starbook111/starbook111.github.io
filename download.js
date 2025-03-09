@@ -70,18 +70,30 @@ const fileExport = () => {
     // 2次元配列 world を各行連結した文字列の配列に変換し、上下反転
     const worldStringArray = world.map((row) => row.join("")).reverse();
 
-    worldData.forEach((chunk) => {
+    const createSVGRect = (stringIndex, rowIndex, StringData) => {
+      return `<rect x="${stringIndex * 20}" y="${rowIndex * 20}" width="20" height="20" fill="${ColorVariations[StringData]}"/>`;
+    };
+
+    const createSVG = (chunk) => {
       let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360">`;
       chunk.data.forEach((rowData, rowIndex) => {
-        rowData.forEach((StringData, stringIndex) => {
-          if (StringData != 0) {
-            svg += `<rect x="${stringIndex * 20}" y="${
-              rowIndex * 20
-            }" width="20" height="20" fill="${ColorVariations[StringData]}"/>`;
-          }
-        });
+        svg += createSVGRow(rowData, rowIndex);
       });
       svg += "</svg>";
+      return svg;
+    };
+
+    const createSVGRow = (rowData, rowIndex) => {
+      return rowData.reduce((acc, StringData, stringIndex) => {
+        if (StringData != 0) {
+          acc += createSVGRect(stringIndex, rowIndex, StringData);
+        }
+        return acc;
+      }, "");
+    };
+
+    const processChunk = (chunk) => {
+      const svg = createSVG(chunk);
       const md5 = getRandomMD5();
       zip.file(`${md5}.svg`, svg);
       projectJson.targets[2].costumes.push({
@@ -92,8 +104,10 @@ const fileExport = () => {
         md5ext: `${md5}.svg`,
         rotationCenterX: 240,
         rotationCenterY: 180,
-      },);
-    });
+      });
+    };
+
+    worldData.forEach(processChunk);
 
     const reversedWorldStringArray = worldStringArray;
     projectJson.targets[0].lists["/]:RR9WxA|~;a{XK,{rv"][1] =
@@ -102,7 +116,7 @@ const fileExport = () => {
     zip.file("project.json", JSON.stringify(projectJson, null, 2));
 
     // ZIPを作成してダウンロード
-    zip.generateAsync({ type: "blob" }).then(function (content) {
+    zip.generateAsync({ type: "blob" }).then((content) => {
       saveAs(content, "project.sb3");
     });
   });

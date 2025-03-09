@@ -9,15 +9,14 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 </head>
 
 <body>
   <div id="header">
     <input id="Project-Name" type="text" value="project">
-    <a href="https://starbook111.github.io/Terms-of-Use.html">Terms of Service</a>
-    <a href="https://starbook111.github.io/credit.html">credit</a>
   </div>
+  <a id="Terms-of-Service" href="https://starbook111.github.io/Terms-of-Use.html" target="_blank">Terms of Service</a>
+  <a id="credit" href="https://starbook111.github.io/credit.html" target="_blank">credit</a>
   <div id="Control-button">
     <img class="Control-button" src="./images/play.svg" alt="">
     <img class="Control-button" src="./images/stop.svg" alt="">
@@ -26,6 +25,11 @@
     <p class="mode">code</p>
     <p class="mode">animation</p>
     <p class="mode">world</p>
+  </div>
+  <div id="sidebar"></div>
+  <div id="sidebarElement">
+    <img id="addPolygon" src="./images/polygon.svg" alt="">
+    <div id="addSelection"></div>
   </div>
   <div id="WorldSidebar">
     <img class="tool selected" src="./images/draw.svg" alt="">
@@ -36,16 +40,14 @@
   <div id="AnimationSideber">
     <img class="tool" src="./images/line.svg" alt="">
     <img class="tool" id="animationErase" src="./images/erase.svg" alt="">
+    <img class="tool" src="./images/pointer.svg" alt="">
   </div>
   <p id="file">ファイル</p>
   <canvas width="533.3333333333334" height="400" id="edit"></canvas>
-  <div id="Sprite-list">
-    <img id="addPolygon" src="./images/polygon.svg" alt="">
-    <div id="addSelection">
-      <img src="./images/draw.svg" alt="">
-      <img src="./images/drag.svg" alt="">
-      <img src="./images/drag.svg" alt="">
-    </div>
+  <div id="TimeBar">
+  </div>
+  <img id="TimeLine" src="./images/TimeLine.svg" alt="">
+  </img>
   </div>
   <canvas id="screen" width="540" height="405"></canvas>
   <script type="module" src="./main.js"></script>

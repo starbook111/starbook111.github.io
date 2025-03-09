@@ -7,6 +7,20 @@
   background-color: rgb(45, 45, 45);
 }
 
+#Terms-of-Service {
+  position: absolute;
+  top: 10px;
+  right: 160px;
+  color: white;
+}
+
+#credit {
+  position: absolute;
+  top: 10px;
+  right: 80px;
+  color: white;
+}
+
 #Project-Name {
   width: 180px;
   height: 30px;
@@ -62,13 +76,22 @@
   background-color: rgba(0, 230, 255, 0.2);
 }
 
-#WorldSidebar {
+#sidebar {
   position: absolute;
   top: 110px;
   left: 0px;
+  padding-top: 10px;
+  width: 160px;
+  height: 390px;
+  background-color: rgb(20, 20, 20);
+}
+
+#WorldSidebar {
+  position: absolute;
+  top: 110px;
+  left: 80px;
   width: 80px;
   height: 400px;
-  background-color: rgb(20, 20, 20);
   display: none;
 }
 
@@ -79,10 +102,9 @@
 #AnimationSideber {
   position: absolute;
   top: 110px;
-  left: 0px;
+  left: 80px;
   width: 80px;
   height: 400px;
-  background-color: rgb(20, 20, 20);
   display: none;
 }
 
@@ -104,13 +126,38 @@
   background-color: rgba(255, 255, 255, 0.3);
 }
 
-#Sprite-list {
-  width: 614px;
+#TimeBar {
+  width: 533px;
   height: 84px;
   position: absolute;
   bottom: 0px;
-  left: 0px;
+  left: 160px;
   background-color: rgb(45, 45, 45);
+  display: flex;
+}
+
+#TimeLine {
+  position: absolute;
+  left: 152.50px;
+  bottom: 0px;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+.polygonIcon {
+  transition-duration: 0.2s;
+  width: 50px;
+  height: 50px;
+  margin: 10px 50px 0px 20px;
+  border-radius: 5px;
+  background-color: #00a0ff;
+}
+
+.polygonIcon:hover {
+  margin: 10px 15px 0px 15px;
+  width: 60px;
+  height: 60px;
 }
 
 .tool {
@@ -123,8 +170,10 @@
 }
 
 #addPolygon {
-  transition-duration: 0.5s;
-  margin: 15px 0px 20px 15px;
+  transition-duration: 0.3s;
+  position: absolute;
+  left: 20px;
+  bottom: 100px;
   padding: 5px 5px 10px 10px;
   width: 30px;
   height: 30px;
@@ -135,25 +184,25 @@
 }
 
 #addPolygon:hover {
-  margin: 12px 0px 20px 12px;
+  left: 17px;
+  bottom: 97px;
   border: 6px solid rgba(255, 255, 255, 0.219);
 }
 
 #addSelection {
-  transition-duration: 0.5s;
+  transition-duration: 0.3s;
   position: absolute;
-  bottom: 19px;
-  left: 62px;
-  width: 0px;
-  height: 50px;
-  border-radius: 0px 5px 5px 0px;
+  left: 22.5px;
+  bottom: 150px;
+  width: 45px;
+  height: 0px;
+  border-radius: 5px 5px 0px 0px;
   background-color: #00a0ff;
-  display: flex;
 }
 
 #addSelection.hover {
-  width: 180px;
-  left: 68px;
+  bottom: 154px;
+  height: 120px;
 }
 
 .tool.selected {
@@ -163,7 +212,7 @@
 #edit {
   position: absolute;
   top: 110px;
-  left: 80px;
+  left: 160px;
   background-color: rgb(30, 30, 30);
 }
 
